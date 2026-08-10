@@ -6,12 +6,11 @@ Future value object tests should follow this structure.
 
 import pytest
 
-from northstar_core.foundation.value_objects import Symbol
 from northstar_core.foundation.exceptions.validation import (
     InvalidSymbolError,
     ValidationError,
 )
-
+from northstar_core.foundation.value_objects import Symbol
 
 # ---------------------------------------------------------------------------
 # Construction

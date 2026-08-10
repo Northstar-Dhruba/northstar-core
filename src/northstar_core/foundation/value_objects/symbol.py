@@ -19,7 +19,6 @@ from dataclasses import dataclass
 
 from northstar_core.foundation.exceptions.validation import InvalidSymbolError
 
-
 _SYMBOL_PATTERN = re.compile(r"^[A-Z0-9._-]{1,32}$")
 
 
