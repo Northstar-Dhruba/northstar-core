@@ -6,6 +6,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.2.1] — 2026-08-11
+
+### Foundation – ExchangeCode Reference Value Object
+
+### Added
+
+- `ExchangeCode` value object in `foundation.value_objects`.
+- `InvalidExchangeCodeError` in `foundation.exceptions.validation`.
+- ExchangeCode contract test suite at `tests/foundation/value_objects/test_exchange_code.py`.
+
+### Engineering
+
+- ExchangeCode designated as Northstar Reference Value Object v1.0.
+- Extended the Northstar Reference Value Object Family.
+- Verified Reference-First Engineering workflow across multiple Value Objects.
+
+### Documentation
+
+- Updated Reference Implementation Registry.
+
+---
+
 ## [0.2.0] — 2026-08-10
 
 ### Foundation – Symbol Reference Implementation
