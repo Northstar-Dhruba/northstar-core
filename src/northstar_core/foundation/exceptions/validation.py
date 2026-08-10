@@ -7,3 +7,7 @@ class ValidationError(ValueError):
 
 class InvalidSymbolError(ValidationError):
     """Raised when a symbol value is invalid."""
+
+
+class InvalidExchangeCodeError(ValidationError):
+    """Raised when an exchange code value is invalid."""
