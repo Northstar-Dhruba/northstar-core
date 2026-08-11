@@ -15,3 +15,7 @@ class InvalidExchangeCodeError(ValidationError):
 
 class InvalidQuantityError(ValidationError):
     """Raised when a quantity value is invalid."""
+
+
+class InvalidPercentageError(ValidationError):
+    """Raised when a percentage value is invalid."""
