@@ -6,7 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [0.2.2] — 2026-08-11
+## [Unreleased]
 
 ### Foundation – Quantity Reference Value Object
 
@@ -18,10 +18,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Engineering
 
-- Quantity designated as the Numeric Family Root.
-- Established the first Behavioral Value Object.
+- Established Quantity as the Numeric Family Root.
+- Introduced the first Behavioral Value Object.
 - Extended the Foundation Value Object Family.
-- Validated behavioral contract testing.
+- Validated the Behavioral Contract Test pattern.
 
 ### Documentation
 
