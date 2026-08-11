@@ -6,6 +6,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.2.2] — 2026-08-11
+
+### Foundation – Quantity Reference Value Object
+
+### Added
+
+- `Quantity` value object in `foundation.value_objects`.
+- `InvalidQuantityError` in `foundation.exceptions.validation`.
+- Quantity contract test suite at `tests/foundation/value_objects/test_quantity.py`.
+
+### Engineering
+
+- Quantity designated as the Numeric Family Root.
+- Established the first Behavioral Value Object.
+- Extended the Foundation Value Object Family.
+- Validated behavioral contract testing.
+
+### Documentation
+
+- Updated Reference Implementation Registry.
+
+---
+
 ## [0.2.1] — 2026-08-11
 
 ### Foundation – ExchangeCode Reference Value Object
