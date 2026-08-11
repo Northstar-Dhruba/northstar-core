@@ -11,3 +11,7 @@ class InvalidSymbolError(ValidationError):
 
 class InvalidExchangeCodeError(ValidationError):
     """Raised when an exchange code value is invalid."""
+
+
+class InvalidQuantityError(ValidationError):
+    """Raised when a quantity value is invalid."""
