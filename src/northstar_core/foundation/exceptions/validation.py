@@ -9,6 +9,10 @@ class InvalidSymbolError(ValidationError):
     """Raised when a symbol value is invalid."""
 
 
+class InvalidCurrencyError(ValidationError):
+    """Raised when a currency value is invalid."""
+
+
 class InvalidExchangeCodeError(ValidationError):
     """Raised when an exchange code value is invalid."""
 

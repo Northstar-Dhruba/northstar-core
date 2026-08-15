@@ -29,6 +29,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the Reference Implementation Registry.
 - Formalized the Measurement Family status as complete.
 
+### Foundation – Financial Family Initiation
+
+### Added
+
+- `Currency` Value Object in `foundation.value_objects`.
+- `InvalidCurrencyError` in `foundation.exceptions.validation`.
+- Currency contract test suite at `tests/foundation/value_objects/test_currency.py`.
+
+### Engineering
+
+- Established `Currency` as the Financial Family Root.
+- Introduced the Financial Family.
+- Extended the Foundation Value Object Family.
+- Validated structural denomination semantics independent of registry membership.
+
+### Documentation
+
+- Updated the Reference Implementation Registry.
+- Updated Foundation Family status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
