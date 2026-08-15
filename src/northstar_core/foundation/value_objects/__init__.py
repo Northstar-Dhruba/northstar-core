@@ -6,6 +6,7 @@ from .money import Money
 from .percentage import Percentage
 from .price import Price
 from .quantity import Quantity
+from .timeframe import Timeframe
 from .symbol import Symbol
 
 __all__ = [
@@ -15,5 +16,6 @@ __all__ = [
     "Percentage",
     "Price",
     "Quantity",
+    "Timeframe",
     "Symbol",
 ]
