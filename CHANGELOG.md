@@ -92,6 +92,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated Reference Implementation Registry.
 - Updated Financial Family status.
 
+### Foundation – Temporal Family and Foundation Completion
+
+### Added
+
+- `Timeframe` Value Object in `foundation.value_objects`.
+- `InvalidTimeframeError` in `foundation.exceptions.validation`.
+- Timeframe contract test suite at `tests/foundation/value_objects/test_timeframe.py`.
+
+### Engineering
+
+- Completed the Temporal Family.
+- Approved `Timeframe` as the Temporal Family Root.
+- Completed the Foundation package.
+- Validated closed-vocabulary temporal semantics.
+- Completed Foundation implementation and contract verification.
+
+### Documentation
+
+- Updated Reference Implementation Registry.
+- Updated Foundation Family status.
+- Updated Foundation completion status.
+
 ---
 
 ## [0.2.1] — 2026-08-11

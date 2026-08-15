@@ -35,3 +35,7 @@ class InvalidMoneyError(ValidationError):
 
 class InvalidPercentageError(ValidationError):
     """Raised when a percentage value is invalid."""
+
+
+class InvalidTimeframeError(ValidationError):
+    """Raised when a timeframe value is invalid."""
