@@ -29,5 +29,9 @@ class InvalidPriceError(ValidationError):
     """Raised when a price value is invalid."""
 
 
+class InvalidMoneyError(ValidationError):
+    """Raised when a money value is invalid."""
+
+
 class InvalidPercentageError(ValidationError):
     """Raised when a percentage value is invalid."""

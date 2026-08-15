@@ -71,6 +71,27 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated Reference Implementation Registry.
 - Updated Financial Family implementation status.
 
+### Foundation – Financial Family Completion
+
+### Added
+
+- `Money` Value Object in `foundation.value_objects`.
+- `InvalidMoneyError` in `foundation.exceptions.validation`.
+- Money contract test suite at `tests/foundation/value_objects/test_money.py`.
+
+### Engineering
+
+- Completed the Financial Family.
+- Approved `Money` as the Financial Family financial-state value object.
+- Established the complete composed Financial Value Object pattern.
+- Completed the Financial Family implementation.
+- Validated composed Financial Value Object semantics.
+
+### Documentation
+
+- Updated Reference Implementation Registry.
+- Updated Financial Family status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
