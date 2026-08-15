@@ -6,8 +6,8 @@ from .money import Money
 from .percentage import Percentage
 from .price import Price
 from .quantity import Quantity
-from .timeframe import Timeframe
 from .symbol import Symbol
+from .timeframe import Timeframe
 
 __all__ = [
     "Currency",
