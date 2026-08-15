@@ -8,24 +8,26 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Foundation – Quantity Reference Value Object
+### Foundation – Measurement Family Completion
 
 ### Added
 
 - `Quantity` value object in `foundation.value_objects`.
-- `InvalidQuantityError` in `foundation.exceptions.validation`.
-- Quantity contract test suite at `tests/foundation/value_objects/test_quantity.py`.
+- `Percentage` value object in `foundation.value_objects`.
+- `InvalidQuantityError` and `InvalidPercentageError` in `foundation.exceptions.validation`.
+- Quantity and Percentage contract test suites at `tests/foundation/value_objects/test_quantity.py` and `tests/foundation/value_objects/test_percentage.py`.
 
 ### Engineering
 
-- Established Quantity as the Numeric Family Root.
-- Introduced the first Behavioral Value Object.
-- Extended the Foundation Value Object Family.
-- Validated the Behavioral Contract Test pattern.
+- Completed the Measurement Family as an approved Foundation Value Object family.
+- Established `Quantity` as the Measurement Family root.
+- Established `Percentage` as the second approved Measurement family member.
+- Extended the approved Foundation Value Object family beyond the Identity baseline.
 
 ### Documentation
 
-- Updated Reference Implementation Registry.
+- Updated the Reference Implementation Registry.
+- Formalized the Measurement Family status as complete.
 
 ---
 
