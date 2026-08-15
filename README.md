@@ -6,6 +6,33 @@ It contains all business logic used throughout the platform while remaining comp
 
 ---
 
+## Project Status
+
+Northstar
+
+Current Status
+
+Foundation
+
+Status
+
+COMPLETE
+
+Business Families
+
+- Identity
+- Measurement
+- Financial
+- Temporal
+
+Current Development Focus
+
+Core Domain
+
+Future work now builds on the completed Foundation package. Foundation is treated as a stable platform while new feature development proceeds in Core Domain modules.
+
+---
+
 ## Responsibilities
 
 - Technical Indicators
