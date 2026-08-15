@@ -21,5 +21,13 @@ class InvalidQuantityError(ValidationError):
     """Raised when a quantity value is invalid."""
 
 
+class CurrencyMismatchError(ValidationError):
+    """Raised when a business operation cannot proceed across currencies."""
+
+
+class InvalidPriceError(ValidationError):
+    """Raised when a price value is invalid."""
+
+
 class InvalidPercentageError(ValidationError):
     """Raised when a percentage value is invalid."""

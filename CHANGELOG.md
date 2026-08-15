@@ -49,6 +49,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the Reference Implementation Registry.
 - Updated Foundation Family status.
 
+### Foundation – Financial Family Expansion
+
+### Added
+
+- `Price` Value Object in `foundation.value_objects`.
+- `InvalidPriceError` in `foundation.exceptions.validation`.
+- `CurrencyMismatchError` in `foundation.exceptions.validation`.
+- Price contract test suite at `tests/foundation/value_objects/test_price.py`.
+
+### Engineering
+
+- Approved the first composed Foundation Value Object.
+- Established the composed Financial Value Object implementation pattern.
+- Extended the Financial Family.
+- Validated currency-aware business operations.
+- Validated composed value object contract testing.
+
+### Documentation
+
+- Updated Reference Implementation Registry.
+- Updated Financial Family implementation status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
