@@ -135,6 +135,27 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added the Core Domain Reference Implementation Registry.
 - Updated Core Domain implementation status.
 
+### Core Domain – Exchange
+
+#### Added
+
+- Exchange entity.
+- InvalidExchangeError.
+- Exchange Reference Entity Contract Test Suite.
+
+#### Engineering
+
+- Established Exchange as the second approved Core Domain Entity.
+- Established Exchange as the second approved Core Domain Reference Entity.
+- Verified Exchange against ADR-005.
+- Completed Exchange implementation and contract verification.
+- Preserved the approved Instrument / Exchange / Listing boundaries.
+
+#### Documentation
+
+- Updated the Core Domain Reference Implementation Registry.
+- Updated Core Domain implementation progress.
+
 ---
 
 ## [0.2.1] — 2026-08-11
