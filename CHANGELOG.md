@@ -114,6 +114,27 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated Foundation Family status.
 - Updated Foundation completion status.
 
+### Core Domain – Instrument
+
+#### Added
+
+- Instrument entity.
+- InvalidInstrumentError.
+- Instrument Reference Entity Contract Test Suite.
+
+#### Engineering
+
+- Established Instrument as the first Core Domain Entity.
+- Established Instrument as the first approved Core Domain Reference Entity.
+- Established the Core Domain Entity implementation pattern.
+- Validated Instrument against ADR-005.
+- Completed Instrument implementation and contract verification.
+
+#### Documentation
+
+- Added the Core Domain Reference Implementation Registry.
+- Updated Core Domain implementation status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
