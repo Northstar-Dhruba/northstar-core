@@ -156,6 +156,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the Core Domain Reference Implementation Registry.
 - Updated Core Domain implementation progress.
 
+### Core Domain – Listing
+
+#### Added
+
+- Listing entity.
+- InvalidListingError.
+- Listing Reference Entity Contract Test Suite.
+
+#### Engineering
+
+- Established Listing as the third approved Core Domain Entity.
+- Established Listing as the third approved Core Domain Reference Entity.
+- Completed implementation using approved Core Domain Value Objects.
+- Verified Listing against ADR-005 and ADR-006.
+- Removed duplicated ExchangeCode ownership from Listing.
+- Completed Listing implementation and contract verification.
+- Completed implementation of the Core Domain Foundation.
+
+#### Documentation
+
+- Updated the Core Domain Reference Implementations Registry.
+- Updated Core Domain Foundation implementation status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
