@@ -39,3 +39,7 @@ class InvalidPercentageError(ValidationError):
 
 class InvalidTimeframeError(ValidationError):
     """Raised when a timeframe value is invalid."""
+
+
+class InvalidPointInTimeError(ValidationError):
+    """Raised when a point-in-time value is invalid."""

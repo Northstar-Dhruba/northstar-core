@@ -179,6 +179,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the Core Domain Reference Implementations Registry.
 - Updated Core Domain Foundation implementation status.
 
+### Foundation – PointInTime
+
+#### Added
+
+- PointInTime Foundation Value Object.
+- InvalidPointInTimeError.
+- Reference Foundation Value Object Contract Suite.
+
+#### Engineering
+
+- Established PointInTime as the Reference Temporal Foundation Value Object.
+- Completed implementation using the approved ADR-007 architecture.
+- Verified canonical UTC normalization.
+- Verified deterministic value equality and hashing.
+- Verified PointInTime complements Timeframe.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Updated the Foundation Reference Implementations Registry.
+- Updated Foundation implementation status.
+
 ---
 
 ## [0.2.1] — 2026-08-11
