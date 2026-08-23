@@ -225,6 +225,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Completed Quoted Market State Design Specification.
 - Completed Market Observation implementation documentation.
 
+### Market Data – Tick
+
+#### Added
+
+- Tick Reference High-Frequency Point Market Observation
+- TickState Tick-specific Value Object
+- InvalidTickError
+- InvalidTickStateError
+- Reference High-Frequency Point Market Observation Contract Suite
+- Reference High-Frequency Point Observation Value Object Contract Suite
+
+#### Engineering
+
+- Established Tick as the approved Reference High-Frequency Point Market Observation.
+- Established TickState as the approved Tick-specific Value Object.
+- Implemented immutable high-frequency point Market Observation composition.
+- Implemented Listing, PointInTime, and TickState composition.
+- Verified aggregate ownership boundaries.
+- Verified immutable observation semantics.
+- Verified value equality and hashing.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Tick Design Specification.
+- Completed TickState Design Specification.
+- Completed Tick implementation documentation.
+
 ---
 
 ## [0.2.1] — 2026-08-11
