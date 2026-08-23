@@ -253,6 +253,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Completed TickState Design Specification.
 - Completed Tick implementation documentation.
 
+### Market Data – Order Book
+
+#### Added
+
+- OrderBook Reference Market-Depth Observation
+- OrderBookState Order Book-specific Value Object
+- InvalidOrderBookError
+- InvalidOrderBookStateError
+- Reference Market-Depth Observation Contract Suite
+- Reference Market-Depth Observation Value Object Contract Suite
+
+#### Engineering
+
+- Established OrderBook as the approved Reference Market-Depth Observation.
+- Established OrderBookState as the approved Order Book-specific Value Object.
+- Implemented immutable market-depth observation composition.
+- Implemented Listing, PointInTime, and OrderBookState composition.
+- Verified aggregate ownership boundaries.
+- Verified immutable observation semantics.
+- Verified value equality and hashing.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Order Book Design Specification.
+- Completed OrderBookState Design Specification.
+- Completed OrderBook implementation documentation.
+
 ---
 
 ## [0.2.1] — 2026-08-11
