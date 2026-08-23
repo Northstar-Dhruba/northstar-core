@@ -201,6 +201,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated the Foundation Reference Implementations Registry.
 - Updated Foundation implementation status.
 
+### Market Data – Quote
+
+#### Added
+
+- Quote Reference Market Observation
+- InvalidQuoteError
+- Reference Market Observation Contract Suite
+
+#### Engineering
+
+- Established Quote as the first approved Reference Market Observation.
+- Implemented immutable Market Observation composition.
+- Implemented Listing, PointInTime, and QuotedMarketState composition.
+- Verified aggregate ownership boundaries.
+- Verified value equality and hashing.
+- Verified immutable observation semantics.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Quote Design Specification.
+- Completed Quoted Market State Design Specification.
+- Completed Market Observation implementation documentation.
+
 ---
 
 ## [0.2.1] — 2026-08-11
