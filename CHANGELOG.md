@@ -281,6 +281,62 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Completed OrderBookState Design Specification.
 - Completed OrderBook implementation documentation.
 
+### Orders
+
+#### Added
+
+Reference Aggregate Root
+
+- Order
+
+Supporting Orders Value Objects
+
+- OrderStatus
+- OrderIdentity
+
+Supporting Core Domain Value Objects
+
+- ParticipantIdentity
+- ParticipantReference
+
+Exceptions
+
+- InvalidOrderError
+- InvalidOrderStatusError
+- InvalidOrderIdentityError
+- InvalidParticipantIdentityError
+- InvalidParticipantReferenceError
+
+Reference Contract Suites
+
+- Order Reference Aggregate Contract Suite
+- OrderStatus Reference Lifecycle Value Object Contract Suite
+- OrderIdentity Reference Aggregate Identity Value Object Contract Suite
+- ParticipantIdentity Reference Aggregate Identity Value Object Contract Suite
+- ParticipantReference Reference Identity Association Value Object Contract Suite
+
+#### Engineering
+
+- Established Order as the Reference Aggregate Root.
+- Established OrderStatus as the Reference Lifecycle State Value Object.
+- Established OrderIdentity as the Reference Aggregate Identity Value Object.
+- Established ParticipantIdentity as the second Aggregate Identity reference implementation.
+- Established ParticipantReference as the Reference Identity Association Value Object.
+- Implemented identity-based aggregate equality.
+- Implemented aggregate composition.
+- Verified ownership boundaries.
+- Verified aggregate consistency.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Order Design Specification.
+- Completed OrderStatus Design Specification.
+- Completed Participant Design Specification.
+- Completed ParticipantIdentity Design Specification.
+- Completed ParticipantReference Design Specification.
+- Completed Order Business Composition Review.
+
 ---
 
 ## [0.2.1] — 2026-08-11
