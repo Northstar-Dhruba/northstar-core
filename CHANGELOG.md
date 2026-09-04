@@ -337,6 +337,51 @@ Reference Contract Suites
 - Completed ParticipantReference Design Specification.
 - Completed Order Business Composition Review.
 
+### Trades
+
+#### Added
+
+Reference Aggregate Root
+
+- Trade
+
+Supporting Trades Value Objects
+
+- TradeIdentity
+
+Supporting Core Domain Value Objects
+
+- ParticipantIdentity
+- ParticipantReference
+
+Exceptions
+
+- InvalidTradeError
+- InvalidTradeIdentityError
+
+Reference Contract Suites
+
+- Trade Reference Aggregate Contract Suite
+- TradeIdentity Reference Aggregate Identity Value Object Contract Suite
+
+#### Engineering
+
+- Established Trade as the Reference Immutable Aggregate Root.
+- Established TradeIdentity as the third Aggregate Identity Value Object reference implementation.
+- Reused ParticipantReference for participant attribution.
+- Implemented immutable aggregate composition.
+- Implemented identity-based aggregate equality.
+- Verified aggregate ownership boundaries.
+- Verified historical execution immutability.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Trade Business Analysis.
+- Completed Trade Design Specification.
+- Completed TradeIdentity Business Analysis.
+- Completed TradeIdentity Design Specification.
+
 ---
 
 ## [0.2.1] — 2026-08-11
