@@ -436,6 +436,44 @@ Reference Contract Suites
 - Completed Position Design Specification.
 - Completed Portfolio Position Collection & Aggregate Consistency Review.
 
+### Strategy
+
+#### Added
+
+Reference Aggregate Root
+
+- Strategy
+
+Supporting Strategy Value Objects
+
+- StrategyIdentity
+
+Exceptions
+
+- InvalidStrategyError
+- InvalidStrategyIdentityError
+
+Reference Contract Suites
+
+- Strategy Reference Aggregate Contract Suite
+- StrategyIdentity Reference Aggregate Identity Value Object Contract Suite
+
+#### Engineering
+
+- Established Strategy as the Reference Decision Policy Aggregate Root.
+- Established StrategyIdentity as the fifth Aggregate Identity reference implementation.
+- Implemented identity-based aggregate equality.
+- Implemented minimal Aggregate Root composition.
+- Confirmed external consumption of Market Data, Portfolio, Trade, and Order contexts.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Strategy Business Analysis.
+- Completed Strategy Design Specification.
+- Completed StrategyIdentity Business Analysis.
+- Completed StrategyIdentity Design Specification.
+
 ---
 
 ## [0.2.1] — 2026-08-11
