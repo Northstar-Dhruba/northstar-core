@@ -382,6 +382,60 @@ Reference Contract Suites
 - Completed TradeIdentity Business Analysis.
 - Completed TradeIdentity Design Specification.
 
+### Portfolio
+
+#### Added
+
+Reference Aggregate Root
+
+- Portfolio
+
+Supporting Portfolio Value Objects
+
+- PortfolioIdentity
+
+Supporting Portfolio Entity
+
+- Position
+
+Supporting Core Domain Value Objects
+
+- ParticipantIdentity
+- ParticipantReference
+
+Exceptions
+
+- InvalidPortfolioError
+- InvalidPortfolioIdentityError
+- InvalidPositionError
+
+Reference Contract Suites
+
+- Portfolio Reference Aggregate Contract Suite
+- PortfolioIdentity Reference Aggregate Identity Value Object Contract Suite
+- Position Reference Entity Contract Suite
+
+#### Engineering
+
+- Established Portfolio as the Reference Ownership Interpretation Aggregate Root.
+- Established PortfolioIdentity as the fourth Aggregate Identity reference implementation.
+- Established Position as the Reference Subordinate Entity.
+- Implemented Portfolio-owned Position collection.
+- Implemented duplicate Listing protection.
+- Implemented identity-based aggregate equality.
+- Verified aggregate consistency.
+- Completed implementation and contract verification.
+
+#### Documentation
+
+- Completed Portfolio Business Analysis.
+- Completed Portfolio Design Specification.
+- Completed PortfolioIdentity Business Analysis.
+- Completed PortfolioIdentity Design Specification.
+- Completed Position Business Analysis.
+- Completed Position Design Specification.
+- Completed Portfolio Position Collection & Aggregate Consistency Review.
+
 ---
 
 ## [0.2.1] — 2026-08-11
