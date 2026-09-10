@@ -10,7 +10,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from northstar_core.foundation.exceptions.validation import ValidationError
-from northstar_core.strategy.value_objects import StrategyIdentity
+from northstar_core.strategy.value_objects import (
+    AssetAnalysis,
+    Recommendation,
+    RecommendationAction,
+    StrategyIdentity,
+)
+
+_STRONG_BULLISH_SIGNAL = "strong bullish"
+_STRONG_BEARISH_SIGNAL = "strong bearish"
 
 
 class InvalidStrategyError(ValidationError):
@@ -46,6 +54,37 @@ class Strategy:
 
     def __hash__(self) -> int:
         return hash(self.strategy_identity)
+
+    def evaluate(self, asset_analysis: AssetAnalysis) -> Recommendation:
+        """Produce the MVP recommendation for one AssetAnalysis.
+
+        A strong bullish signal produces BUY, a strong bearish signal produces
+        SELL, and conflicting or all other signal sets produce HOLD.
+        """
+        if asset_analysis is None:
+            raise InvalidStrategyError("Strategy asset analysis cannot be None.")
+        if not isinstance(asset_analysis, AssetAnalysis):
+            raise InvalidStrategyError("Strategy asset analysis must be an AssetAnalysis value.")
+
+        action = RecommendationAction(self._select_action(asset_analysis))
+        return Recommendation(
+            action=action,
+            asset_analysis=asset_analysis,
+            strategy_identity=self.strategy_identity,
+            point_in_time=asset_analysis.point_in_time,
+        )
+
+    @staticmethod
+    def _select_action(asset_analysis: AssetAnalysis) -> str:
+        normalized_signals = {signal.casefold() for signal in asset_analysis.summarized_signals}
+        has_strong_bullish_signal = _STRONG_BULLISH_SIGNAL in normalized_signals
+        has_strong_bearish_signal = _STRONG_BEARISH_SIGNAL in normalized_signals
+
+        if has_strong_bullish_signal and not has_strong_bearish_signal:
+            return "BUY"
+        if has_strong_bearish_signal and not has_strong_bullish_signal:
+            return "SELL"
+        return "HOLD"
 
     def __str__(self) -> str:
         return str(self.strategy_identity)
