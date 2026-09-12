@@ -1,6 +1,10 @@
 """Strategy-specific Value Objects for the Strategy bounded context."""
 
 from .asset_analysis import AssetAnalysis, InvalidAssetAnalysisError
+from .market_observation_context import (
+    InvalidMarketObservationContextError,
+    MarketObservationContext,
+)
 from .recommendation import (
     InvalidRecommendationActionError,
     InvalidRecommendationError,
@@ -20,10 +24,12 @@ __all__ = [
     "ExplanationReason",
     "InvalidAssetAnalysisError",
     "InvalidExplanationReasonError",
+    "InvalidMarketObservationContextError",
     "InvalidRecommendationActionError",
     "InvalidRecommendationError",
     "InvalidRecommendationExplanationError",
     "InvalidStrategyIdentityError",
+    "MarketObservationContext",
     "Recommendation",
     "RecommendationAction",
     "RecommendationExplanation",
