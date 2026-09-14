@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from northstar-core!")
+"""Northstar Core domain and foundation package."""

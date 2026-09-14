@@ -8,6 +8,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-14
+
+### Added
+
+- Market Observation Context for factual, time-bound market evidence.
+- Deterministic Asset Analysis Generator behavior.
+- Structured Recommendation Explanation and Explanation Reason value objects.
+- Real Market Intelligence support for interpreting acquired observations.
+- Watchlist Intelligence support through reusable analysis-domain contracts.
+
+### Engineering
+
+- Preserved the frozen Domain architecture and Strategy recommendation policy.
+- Added focused contract coverage for Alpha Domain behavior.
+
+---
+
 ### Foundation – Measurement Family Completion
 
 ### Added
