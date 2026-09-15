@@ -147,6 +147,47 @@ def test_different_temporal_locations_are_not_equal():
     assert PointInTime("2026-08-17T09:30:00Z") != PointInTime("2026-08-17T09:30:01Z")
 
 
+def test_compare_orders_earlier_whole_second_before_later_whole_second():
+    earlier = PointInTime("2026-08-17T09:30:00Z")
+    later = PointInTime("2026-08-17T09:30:01Z")
+
+    assert earlier.compare(later) == -1
+    assert later.compare(earlier) == 1
+
+
+def test_compare_orders_whole_second_before_later_fractional_second():
+    earlier = PointInTime("2026-09-15T09:30:00Z")
+    later = PointInTime("2026-09-15T09:30:00.000001Z")
+
+    assert earlier.compare(later) == -1
+
+
+def test_compare_orders_fractional_second_before_later_whole_second():
+    earlier = PointInTime("2026-09-15T09:30:00.999999Z")
+    later = PointInTime("2026-09-15T09:30:01Z")
+
+    assert earlier.compare(later) == -1
+
+
+def test_compare_returns_zero_for_equal_values_and_equivalent_offsets():
+    left = PointInTime("2026-08-17T14:30:00+05:00")
+    right = PointInTime("2026-08-17T09:30:00Z")
+
+    assert left.compare(right) == 0
+
+
+def test_compare_preserves_microsecond_precision():
+    left = PointInTime("2026-09-15T09:30:00.000001Z")
+    right = PointInTime("2026-09-15T09:30:00.000002Z")
+
+    assert left.compare(right) == -1
+
+
+def test_compare_rejects_unsupported_types():
+    with pytest.raises(TypeError, match="only be compared with PointInTime"):
+        PointInTime("2026-08-17T09:30:00Z").compare("2026-08-17T09:30:01Z")
+
+
 # ---------------------------------------------------------------------------
 # Hashing
 # ---------------------------------------------------------------------------
@@ -156,6 +197,14 @@ def test_equal_point_in_time_values_have_equal_hashes():
     assert hash(PointInTime("2026-08-17T14:30:00+05:00")) == hash(
         PointInTime("2026-08-17T09:30:00Z")
     )
+
+
+def test_compare_does_not_change_equality_or_hash_behavior():
+    left = PointInTime("2026-09-15T09:30:00Z")
+    right = PointInTime("2026-09-15T09:30:00.000000Z")
+
+    assert left == right
+    assert hash(left) == hash(right)
 
 
 def test_point_in_time_is_usable_as_dictionary_key():
