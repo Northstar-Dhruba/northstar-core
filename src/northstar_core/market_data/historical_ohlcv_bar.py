@@ -91,10 +91,13 @@ def _validate_adjusted_close(value: Price | None, currency: object) -> Price | N
 class HistoricalOHLCVBar:
     """Immutable factual OHLCV observation for one historical interval.
 
-    ``point_in_time`` represents the completion or end of the represented
-    interval: the point at which the complete OHLCV observation is considered
-    available for deterministic replay. ``timeframe`` remains generic; Story
-    6.1 initially uses daily bars, while other intervals remain valid.
+    ``point_in_time`` represents the completion or end instant of the
+    represented market interval: the earliest logical instant at which the
+    completed OHLCV bar may participate in deterministic historical replay. It
+    does not represent provider publication time, network arrival time,
+    ingestion time, clearing time, or settlement time. ``timeframe`` remains
+    generic; Story 6.1 initially uses daily bars, while other intervals remain
+    valid.
 
     ``close`` is the reported raw close. ``adjusted_close``, when present, is
     an alternate financially adjusted closing value for research use and is

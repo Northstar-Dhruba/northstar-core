@@ -134,3 +134,55 @@ def test_adjusted_close_is_optional_and_distinct_from_raw_close() -> None:
 
     assert bar.close != bar.adjusted_close
     assert bar.adjusted_close == Price("104", Currency("USD"))
+
+
+def test_point_in_time_represents_interval_completion_for_lookahead_free_replay() -> None:
+    # An arbitrary bar completed at 20:00:00Z must compare as later than an
+    # earlier query instant at 14:00:00Z during deterministic replay
+    completion_pit = PointInTime("2026-09-15T20:00:00Z")
+    earlier_query_pit = PointInTime("2026-09-15T14:00:00Z")
+
+    bar = HistoricalOHLCVBar(
+        Symbol("AAPL"),
+        ExchangeCode("NASDAQ"),
+        completion_pit,
+        Timeframe("1d"),
+        Price("100", Currency("USD")),
+        Price("110", Currency("USD")),
+        Price("95", Currency("USD")),
+        Price("105", Currency("USD")),
+        Quantity("1000"),
+    )
+
+    # An instant prior to bar completion cannot observe the completed bar
+    assert earlier_query_pit.compare(bar.point_in_time) == -1
+    # At or after the completion instant, the completed bar is available
+    assert completion_pit.compare(bar.point_in_time) == 0
+
+
+def test_sequential_bars_are_strictly_ordered_by_completion_point_in_time() -> None:
+    bar_1 = HistoricalOHLCVBar(
+        Symbol("AAPL"),
+        ExchangeCode("NASDAQ"),
+        PointInTime("2026-09-15T10:00:00Z"),
+        Timeframe("1h"),
+        Price("100", Currency("USD")),
+        Price("105", Currency("USD")),
+        Price("98", Currency("USD")),
+        Price("102", Currency("USD")),
+        Quantity("500"),
+    )
+    bar_2 = HistoricalOHLCVBar(
+        Symbol("AAPL"),
+        ExchangeCode("NASDAQ"),
+        PointInTime("2026-09-15T11:00:00Z"),
+        Timeframe("1h"),
+        Price("102", Currency("USD")),
+        Price("108", Currency("USD")),
+        Price("101", Currency("USD")),
+        Price("107", Currency("USD")),
+        Quantity("600"),
+    )
+
+    assert bar_1.point_in_time.compare(bar_2.point_in_time) == -1
+    assert bar_2.point_in_time.compare(bar_1.point_in_time) == 1
