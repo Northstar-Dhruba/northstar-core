@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from northstar_core.domain.listing import Listing
+from northstar_core.domain.value_objects import ListingReference
 from northstar_core.foundation.exceptions.validation import ValidationError
-from northstar_core.foundation.value_objects import PointInTime, Price, Quantity
+from northstar_core.foundation.value_objects import Currency, PointInTime, Price, Quantity
 
 _LONG_WINDOW_LENGTH = 20
 
@@ -15,14 +15,14 @@ class InvalidMarketObservationContextError(ValidationError):
     """Raised when a MarketObservationContext value is invalid."""
 
 
-def _validate_listing(value: Listing) -> Listing:
+def _validate_listing_reference(value: ListingReference) -> ListingReference:
     if value is None:
         raise InvalidMarketObservationContextError(
-            "MarketObservationContext listing cannot be None."
+            "MarketObservationContext listing reference cannot be None."
         )
-    if not isinstance(value, Listing):
+    if not isinstance(value, ListingReference):
         raise InvalidMarketObservationContextError(
-            "MarketObservationContext listing must be a Listing entity."
+            "MarketObservationContext listing reference must be a ListingReference value."
         )
     return value
 
@@ -39,7 +39,7 @@ def _validate_point_in_time(value: PointInTime) -> PointInTime:
     return value
 
 
-def _validate_price(value: Price, field_name: str, listing: Listing) -> Price:
+def _validate_price(value: Price, field_name: str) -> Price:
     if value is None:
         raise InvalidMarketObservationContextError(
             f"MarketObservationContext {field_name} cannot be None."
@@ -48,11 +48,17 @@ def _validate_price(value: Price, field_name: str, listing: Listing) -> Price:
         raise InvalidMarketObservationContextError(
             f"MarketObservationContext {field_name} must be a Price value."
         )
-    if value.currency != listing.currency:
-        raise InvalidMarketObservationContextError(
-            f"MarketObservationContext {field_name} currency must match the listing currency."
-        )
     return value
+
+
+def _validate_denominated_price(value: Price, field_name: str, currency: Currency) -> Price:
+    price = _validate_price(value, field_name)
+    if price.currency != currency:
+        raise InvalidMarketObservationContextError(
+            f"MarketObservationContext {field_name} currency "
+            "must match the market observation currency."
+        )
+    return price
 
 
 def _validate_volume(value: Quantity, field_name: str) -> Quantity:
@@ -67,7 +73,7 @@ def _validate_volume(value: Quantity, field_name: str) -> Quantity:
     return value
 
 
-def _validate_price_history(value: tuple[Price, ...], listing: Listing) -> tuple[Price, ...]:
+def _validate_price_history(value: tuple[Price, ...], currency: Currency) -> tuple[Price, ...]:
     if not isinstance(value, tuple):
         raise InvalidMarketObservationContextError(
             "MarketObservationContext recent closes must be a tuple."
@@ -76,7 +82,7 @@ def _validate_price_history(value: tuple[Price, ...], listing: Listing) -> tuple
         raise InvalidMarketObservationContextError(
             "MarketObservationContext recent closes must contain at least 20 observations."
         )
-    return tuple(_validate_price(price, "recent closes", listing) for price in value)
+    return tuple(_validate_denominated_price(price, "recent closes", currency) for price in value)
 
 
 def _validate_volume_history(value: tuple[Quantity, ...]) -> tuple[Quantity, ...]:
@@ -93,9 +99,14 @@ def _validate_volume_history(value: tuple[Quantity, ...]) -> tuple[Quantity, ...
 
 @dataclass(frozen=True, slots=True)
 class MarketObservationContext:
-    """Complete factual daily market context for one Listing at one point in time."""
+    """Complete factual daily market context for one listed asset at one point in time.
 
-    listing: Listing
+    The market observation currency is the denomination of ``latest_price``.
+    Every other Price fact must use that same currency. Quantity values remain
+    undenominated and are never currency-checked.
+    """
+
+    listing_reference: ListingReference
     observed_at: PointInTime
     latest_price: Price
     previous_close: Price
@@ -106,24 +117,29 @@ class MarketObservationContext:
     recent_volumes: tuple[Quantity, ...]
 
     def __post_init__(self) -> None:
-        listing = _validate_listing(self.listing)
-        recent_closes = _validate_price_history(self.recent_closes, listing)
+        listing_reference = _validate_listing_reference(self.listing_reference)
+        latest_price = _validate_price(self.latest_price, "latest price")
+        currency = latest_price.currency
+
+        previous_close = _validate_denominated_price(
+            self.previous_close, "previous close", currency
+        )
+        daily_high = _validate_denominated_price(self.daily_high, "daily high", currency)
+        daily_low = _validate_denominated_price(self.daily_low, "daily low", currency)
+
+        recent_closes = _validate_price_history(self.recent_closes, currency)
         recent_volumes = _validate_volume_history(self.recent_volumes)
         if len(recent_closes) != len(recent_volumes):
             raise InvalidMarketObservationContextError(
                 "MarketObservationContext recent closes and volumes must have equal lengths."
             )
 
-        latest_price = _validate_price(self.latest_price, "latest price", listing)
-        previous_close = _validate_price(self.previous_close, "previous close", listing)
-        daily_high = _validate_price(self.daily_high, "daily high", listing)
-        daily_low = _validate_price(self.daily_low, "daily low", listing)
         if daily_low > daily_high:
             raise InvalidMarketObservationContextError(
                 "MarketObservationContext daily low cannot exceed daily high."
             )
 
-        object.__setattr__(self, "listing", listing)
+        object.__setattr__(self, "listing_reference", listing_reference)
         object.__setattr__(self, "observed_at", _validate_point_in_time(self.observed_at))
         object.__setattr__(self, "latest_price", latest_price)
         object.__setattr__(self, "previous_close", previous_close)

@@ -26,7 +26,7 @@ class AssetAnalysisGenerator:
             )
 
         return AssetAnalysis(
-            listing=context.listing,
+            listing_reference=context.listing_reference,
             point_in_time=context.observed_at,
             summarized_signals=(self._select_signal(context),),
         )

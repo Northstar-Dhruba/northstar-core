@@ -1,9 +1,6 @@
 """Tests for deterministic AssetAnalysis generation from market observations."""
 
-from northstar_core.domain.exchange import Exchange
-from northstar_core.domain.instrument import Instrument
-from northstar_core.domain.listing import Listing
-from northstar_core.domain.value_objects import ListingStatus, Tradability
+from northstar_core.domain.value_objects import ListingReference
 from northstar_core.foundation.value_objects import (
     Currency,
     ExchangeCode,
@@ -15,14 +12,8 @@ from northstar_core.foundation.value_objects import (
 from northstar_core.strategy import AssetAnalysisGenerator, MarketObservationContext
 
 
-def _build_listing() -> Listing:
-    return Listing(
-        instrument=Instrument(Symbol("AAPL"), "Apple Inc.", "Equity"),
-        exchange=Exchange(ExchangeCode("NASDAQ"), "NASDAQ"),
-        currency=Currency("USD"),
-        listing_status=ListingStatus("Active"),
-        tradability=Tradability("Permitted"),
-    )
+def _build_listing_reference() -> ListingReference:
+    return ListingReference(Symbol("AAPL"), ExchangeCode("NASDAQ"))
 
 
 def _build_context(
@@ -33,7 +24,7 @@ def _build_context(
 ) -> MarketObservationContext:
     currency = Currency("USD")
     return MarketObservationContext(
-        listing=_build_listing(),
+        listing_reference=_build_listing_reference(),
         observed_at=PointInTime("2026-09-11T16:00:00Z"),
         latest_price=Price(latest_price, currency),
         previous_close=Price(previous_close, currency),
@@ -79,3 +70,17 @@ def test_generates_neutral_signal_when_observations_do_not_confirm_a_trend() -> 
     analysis = AssetAnalysisGenerator().generate(context)
 
     assert analysis.summarized_signals == ("neutral trend",)
+
+
+def test_generator_carries_context_listing_reference_into_asset_analysis() -> None:
+    context = _build_context(
+        latest_price="110",
+        previous_close="110",
+        recent_closes=tuple(["110"] * 20),
+    )
+
+    analysis = AssetAnalysisGenerator().generate(context)
+
+    assert analysis.listing_reference is context.listing_reference
+    assert analysis.point_in_time == context.observed_at
+    assert not hasattr(analysis, "listing")
