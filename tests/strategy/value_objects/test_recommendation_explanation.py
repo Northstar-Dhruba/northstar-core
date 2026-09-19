@@ -2,11 +2,8 @@
 
 import pytest
 
-from northstar_core.domain.exchange import Exchange
-from northstar_core.domain.instrument import Instrument
-from northstar_core.domain.listing import Listing
-from northstar_core.domain.value_objects import ListingStatus, Tradability
-from northstar_core.foundation.value_objects import Currency, ExchangeCode, PointInTime, Symbol
+from northstar_core.domain.value_objects import ListingReference
+from northstar_core.foundation.value_objects import ExchangeCode, PointInTime, Symbol
 from northstar_core.strategy import (
     AssetAnalysis,
     ExplanationReason,
@@ -19,14 +16,10 @@ from northstar_core.strategy import (
 
 
 def _build_recommendation():
-    listing = Listing(
-        instrument=Instrument(Symbol("AAPL"), "Apple Inc.", "Equity"),
-        exchange=Exchange(ExchangeCode("NASDAQ"), "NASDAQ"),
-        currency=Currency("USD"),
-        listing_status=ListingStatus("Active"),
-        tradability=Tradability("Permitted"),
+    listing_reference = ListingReference(Symbol("AAPL"), ExchangeCode("NASDAQ"))
+    analysis = AssetAnalysis(
+        listing_reference, PointInTime("2026-09-14T10:00:00Z"), ("strong bullish",)
     )
-    analysis = AssetAnalysis(listing, PointInTime("2026-09-14T10:00:00Z"), ("strong bullish",))
     return Strategy(StrategyIdentity("test-strategy")).evaluate(analysis)
 
 

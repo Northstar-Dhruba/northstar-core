@@ -108,7 +108,7 @@ class Recommendation:
 
     def __str__(self) -> str:
         return (
-            f"{self.action} {self.asset_analysis.listing.instrument.symbol} "
+            f"{self.action} {self.asset_analysis.listing_reference.symbol} "
             f"by {self.strategy_identity} at {self.point_in_time}"
         )
 
