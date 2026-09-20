@@ -17,6 +17,11 @@ from .recommendation_explanation import (
     InvalidRecommendationExplanationError,
     RecommendationExplanation,
 )
+from .recommendation_outcome import (
+    InvalidRecommendationOutcomeError,
+    RecommendationOutcome,
+)
+from .research_horizon import InvalidResearchHorizonError, ResearchHorizon
 from .strategy_identity import InvalidStrategyIdentityError, StrategyIdentity
 
 __all__ = [
@@ -28,10 +33,14 @@ __all__ = [
     "InvalidRecommendationActionError",
     "InvalidRecommendationError",
     "InvalidRecommendationExplanationError",
+    "InvalidRecommendationOutcomeError",
+    "InvalidResearchHorizonError",
     "InvalidStrategyIdentityError",
     "MarketObservationContext",
     "Recommendation",
     "RecommendationAction",
     "RecommendationExplanation",
+    "RecommendationOutcome",
+    "ResearchHorizon",
     "StrategyIdentity",
 ]
