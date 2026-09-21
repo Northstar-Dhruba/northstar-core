@@ -18,6 +18,7 @@ from .value_objects import (
     InvalidPaperFillIdentityError,
     InvalidPaperOrderError,
     InvalidPaperOrderIdentityError,
+    InvalidPaperPortfolioError,
     InvalidPaperPortfolioIdentityError,
     InvalidPositionError,
     OrderSide,
@@ -26,6 +27,7 @@ from .value_objects import (
     PaperOrder,
     PaperOrderIdentity,
     PaperOrderStatus,
+    PaperPortfolio,
     PaperPortfolioIdentity,
     Position,
 )
@@ -37,6 +39,7 @@ __all__ = [
     "InvalidPaperFillIdentityError",
     "InvalidPaperOrderError",
     "InvalidPaperOrderIdentityError",
+    "InvalidPaperPortfolioError",
     "InvalidPaperPortfolioIdentityError",
     "InvalidPositionError",
     "OrderSide",
@@ -45,6 +48,7 @@ __all__ = [
     "PaperOrder",
     "PaperOrderIdentity",
     "PaperOrderStatus",
+    "PaperPortfolio",
     "PaperPortfolioIdentity",
     "Position",
 ]
