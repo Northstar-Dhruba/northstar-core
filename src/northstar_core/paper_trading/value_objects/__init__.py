@@ -7,6 +7,7 @@ from .paper_fill_identity import InvalidPaperFillIdentityError, PaperFillIdentit
 from .paper_order import InvalidPaperOrderError, PaperOrder
 from .paper_order_identity import InvalidPaperOrderIdentityError, PaperOrderIdentity
 from .paper_order_status import PaperOrderStatus
+from .paper_portfolio import InvalidPaperPortfolioError, PaperPortfolio
 from .paper_portfolio_identity import InvalidPaperPortfolioIdentityError, PaperPortfolioIdentity
 from .position import InvalidPositionError, Position
 
@@ -17,6 +18,7 @@ __all__ = [
     "InvalidPaperFillIdentityError",
     "InvalidPaperOrderError",
     "InvalidPaperOrderIdentityError",
+    "InvalidPaperPortfolioError",
     "InvalidPaperPortfolioIdentityError",
     "InvalidPositionError",
     "OrderSide",
@@ -25,6 +27,7 @@ __all__ = [
     "PaperOrder",
     "PaperOrderIdentity",
     "PaperOrderStatus",
+    "PaperPortfolio",
     "PaperPortfolioIdentity",
     "Position",
 ]

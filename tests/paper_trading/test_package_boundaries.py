@@ -131,6 +131,7 @@ def test_the_public_surface_is_exactly_the_approved_vocabulary() -> None:
         "InvalidPaperFillIdentityError",
         "InvalidPaperOrderError",
         "InvalidPaperOrderIdentityError",
+        "InvalidPaperPortfolioError",
         "InvalidPaperPortfolioIdentityError",
         "InvalidPositionError",
         "OrderSide",
@@ -139,6 +140,7 @@ def test_the_public_surface_is_exactly_the_approved_vocabulary() -> None:
         "PaperOrder",
         "PaperOrderIdentity",
         "PaperOrderStatus",
+        "PaperPortfolio",
         "PaperPortfolioIdentity",
         "Position",
     ]
