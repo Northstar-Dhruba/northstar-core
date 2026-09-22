@@ -242,9 +242,16 @@ def test_repr_contains_class_name_amount_and_currency():
 
 
 def test_negative_zero_is_canonicalized_to_zero():
+    """Decimal("-0") == Decimal("0") is True, so equality alone proves nothing.
+
+    This assertion once passed while the stored amount was Decimal("-0") and
+    printed as "-0"; the sign has to be inspected directly.
+    """
     money = Money("-0", Currency("USD"))
 
     assert money.amount == Decimal("0")
+    assert str(money.amount) == "0"
+    assert not money.amount.is_signed()
 
 
 def test_money_is_immutable():

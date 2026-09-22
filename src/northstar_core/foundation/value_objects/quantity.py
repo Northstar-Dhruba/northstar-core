@@ -19,36 +19,16 @@ Note:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from northstar_core.foundation.exceptions.validation import InvalidQuantityError
+from northstar_core.foundation.value_objects._canonical_decimal import (
+    canonical_decimal,
+)
 
 
 def _normalize(value: object) -> Decimal:
-    if value is None:
-        raise InvalidQuantityError("Quantity cannot be None.")
-    if isinstance(value, bool):
-        raise InvalidQuantityError("Quantity must be a numeric value.")
-    if isinstance(value, float):
-        raise InvalidQuantityError("Quantity must not be a float.")
-    if isinstance(value, Decimal):
-        normalized = value
-    elif isinstance(value, int):
-        normalized = Decimal(value)
-    elif isinstance(value, str):
-        if not value.strip():
-            raise InvalidQuantityError("Quantity cannot be empty.")
-        try:
-            normalized = Decimal(value.strip())
-        except InvalidOperation as exc:
-            raise InvalidQuantityError("Quantity must be a numeric value.") from exc
-    else:
-        raise InvalidQuantityError("Quantity must be a numeric value.")
-    if not normalized.is_finite():
-        raise InvalidQuantityError("Quantity must be finite.")
-    normalized = normalized.normalize()
-    canonical_text = format(normalized, "f")
-    return Decimal(canonical_text)
+    return canonical_decimal(value, "Quantity", InvalidQuantityError)
 
 
 def _validate(value: Decimal) -> None:

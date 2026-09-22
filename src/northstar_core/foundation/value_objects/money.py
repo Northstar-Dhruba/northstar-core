@@ -13,42 +13,20 @@ and currency conversion.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from northstar_core.foundation.exceptions.validation import (
     CurrencyMismatchError,
     InvalidMoneyError,
 )
+from northstar_core.foundation.value_objects._canonical_decimal import (
+    canonical_decimal,
+)
 from northstar_core.foundation.value_objects.currency import Currency
 
 
 def _normalize_amount(value: object) -> Decimal:
-    if value is None:
-        raise InvalidMoneyError("Money amount cannot be None.")
-    if isinstance(value, bool):
-        raise InvalidMoneyError("Money amount must be a numeric value.")
-    if isinstance(value, float):
-        raise InvalidMoneyError("Money amount must not be a float.")
-    if isinstance(value, Decimal):
-        normalized = value
-    elif isinstance(value, int):
-        normalized = Decimal(value)
-    elif isinstance(value, str):
-        if not value.strip():
-            raise InvalidMoneyError("Money amount cannot be empty.")
-        try:
-            normalized = Decimal(value.strip())
-        except InvalidOperation as exc:
-            raise InvalidMoneyError("Money amount must be a numeric value.") from exc
-    else:
-        raise InvalidMoneyError("Money amount must be a numeric value.")
-
-    if not normalized.is_finite():
-        raise InvalidMoneyError("Money amount must be finite.")
-
-    normalized = normalized.normalize()
-    canonical_text = format(normalized, "f")
-    return Decimal(canonical_text)
+    return canonical_decimal(value, "Money amount", InvalidMoneyError)
 
 
 def _validate_amount(value: Decimal) -> None:

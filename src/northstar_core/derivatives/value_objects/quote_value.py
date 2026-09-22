@@ -19,6 +19,9 @@ negative: WTI crude settled at -37.63 on 20 April 2020. A Price-based quotation
 could not record that session at all. A quotation is signed here for that
 reason, not as a convenience.
 
+Canonicalization is the shared context-independent Foundation routine, so a
+quotation never depends on the decimal context its caller happened to hold.
+
 Quotations are comparable within one product and meaningless across products.
 Nothing in this value can enforce that, because a value object only sees
 itself; the bar that holds a quotation ties it to exactly one contract, which
@@ -28,65 +31,16 @@ is what makes an unqualified number safe for now.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from northstar_core.foundation.exceptions.validation import ValidationError
+from northstar_core.foundation.value_objects._canonical_decimal import (
+    canonical_decimal,
+)
 
 
 class InvalidQuoteValueError(ValidationError):
     """Raised when a QuoteValue value is invalid."""
-
-
-def _coerce(value: object) -> Decimal:
-    if value is None:
-        raise InvalidQuoteValueError("QuoteValue cannot be None.")
-    if isinstance(value, bool):
-        raise InvalidQuoteValueError("QuoteValue must be a numeric value.")
-    if isinstance(value, float):
-        raise InvalidQuoteValueError("QuoteValue must not be a float.")
-    if isinstance(value, Decimal):
-        coerced = value
-    elif isinstance(value, int):
-        coerced = Decimal(value)
-    elif isinstance(value, str):
-        if not value.strip():
-            raise InvalidQuoteValueError("QuoteValue cannot be empty.")
-        try:
-            coerced = Decimal(value.strip())
-        except InvalidOperation as exc:
-            raise InvalidQuoteValueError("QuoteValue must be a numeric value.") from exc
-    else:
-        raise InvalidQuoteValueError("QuoteValue must be a numeric value.")
-    if not coerced.is_finite():
-        raise InvalidQuoteValueError("QuoteValue must be finite.")
-    return coerced
-
-
-def _canonicalize(value: Decimal) -> Decimal:
-    """Return the canonical spelling of a finite Decimal, digit for digit.
-
-    Decimal.normalize() is not used here, and neither is any arithmetic. Both
-    consult the ambient decimal context and would round a quotation to whatever
-    precision the caller happened to have set: under precision 6, normalize()
-    turns a fifty-two digit quotation into six digits and the observation is
-    gone. A market observation must read back exactly as it was recorded no
-    matter who is holding the context.
-
-    Instead the coefficient is edited directly. Trailing zeros after the
-    decimal point are removed so that 1, 1.0, 1.000 and 1E+0 reach one
-    spelling, the result is rendered in plain notation so that 1E+2 and 100
-    also agree, and negative zero is folded to zero. Decimal construction from
-    text and plain formatting are both exact, so every supplied digit
-    survives.
-    """
-    sign, digits, exponent = value.as_tuple()
-    coefficient = list(digits)
-    while exponent < 0 and coefficient and coefficient[-1] == 0:
-        coefficient.pop()
-        exponent += 1
-    if not any(coefficient):
-        sign, coefficient, exponent = 0, [0], 0
-    return Decimal(format(Decimal((sign, tuple(coefficient), exponent)), "f"))
 
 
 @dataclass(frozen=True, slots=True, order=True)
@@ -110,7 +64,9 @@ class QuoteValue:
     value: Decimal
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "value", _canonicalize(_coerce(self.value)))
+        object.__setattr__(
+            self, "value", canonical_decimal(self.value, "QuoteValue", InvalidQuoteValueError)
+        )
 
     def __str__(self) -> str:
         return str(self.value)
