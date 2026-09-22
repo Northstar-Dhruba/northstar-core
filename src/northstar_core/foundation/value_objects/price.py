@@ -10,42 +10,20 @@ Currency and remains distinct from Quantity-based measurement semantics.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from northstar_core.foundation.exceptions.validation import (
     CurrencyMismatchError,
     InvalidPriceError,
 )
+from northstar_core.foundation.value_objects._canonical_decimal import (
+    canonical_decimal,
+)
 from northstar_core.foundation.value_objects.currency import Currency
 
 
 def _normalize_amount(value: object) -> Decimal:
-    if value is None:
-        raise InvalidPriceError("Price amount cannot be None.")
-    if isinstance(value, bool):
-        raise InvalidPriceError("Price amount must be a numeric value.")
-    if isinstance(value, float):
-        raise InvalidPriceError("Price amount must not be a float.")
-    if isinstance(value, Decimal):
-        normalized = value
-    elif isinstance(value, int):
-        normalized = Decimal(value)
-    elif isinstance(value, str):
-        if not value.strip():
-            raise InvalidPriceError("Price amount cannot be empty.")
-        try:
-            normalized = Decimal(value.strip())
-        except InvalidOperation as exc:
-            raise InvalidPriceError("Price amount must be a numeric value.") from exc
-    else:
-        raise InvalidPriceError("Price amount must be a numeric value.")
-
-    if not normalized.is_finite():
-        raise InvalidPriceError("Price amount must be finite.")
-
-    normalized = normalized.normalize()
-    canonical_text = format(normalized, "f")
-    return Decimal(canonical_text)
+    return canonical_decimal(value, "Price amount", InvalidPriceError)
 
 
 def _validate_amount(value: Decimal) -> None:
