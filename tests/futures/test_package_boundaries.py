@@ -164,6 +164,8 @@ def test_the_derivatives_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(derivatives.__all__) == [
         "ExpirationDate",
         "InvalidExpirationDateError",
+        "InvalidUnderlyingReferenceError",
+        "UnderlyingReference",
     ]
 
 
@@ -171,8 +173,10 @@ def test_the_futures_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(futures.__all__) == [
         "FuturesContract",
         "FuturesProductReference",
+        "FuturesProductSpecification",
         "InvalidFuturesContractError",
         "InvalidFuturesProductReferenceError",
+        "InvalidFuturesProductSpecificationError",
     ]
 
 
@@ -186,7 +190,6 @@ def test_no_deferred_concept_is_exported_yet() -> None:
     exported = set(derivatives.__all__) | set(futures.__all__)
 
     for deferred in (
-        "UnderlyingReference",
         "FuturesContractIdentity",
         "ContractMultiplier",
         "TickSize",
@@ -194,7 +197,8 @@ def test_no_deferred_concept_is_exported_yet() -> None:
         "LastTradingDay",
         "SettlementInstant",
         "ContinuousFuturesContract",
-        "FuturesProductSpecification",
+        "ContractSize",
+        "TickValue",
     ):
         assert deferred not in exported
 

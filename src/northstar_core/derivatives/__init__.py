@@ -9,9 +9,16 @@ This package depends only on Foundation. It must never import Futures or
 Options.
 """
 
-from .value_objects import ExpirationDate, InvalidExpirationDateError
+from .value_objects import (
+    ExpirationDate,
+    InvalidExpirationDateError,
+    InvalidUnderlyingReferenceError,
+    UnderlyingReference,
+)
 
 __all__ = [
     "ExpirationDate",
     "InvalidExpirationDateError",
+    "InvalidUnderlyingReferenceError",
+    "UnderlyingReference",
 ]

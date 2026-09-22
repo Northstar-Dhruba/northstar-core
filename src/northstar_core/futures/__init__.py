@@ -14,13 +14,17 @@ rollover, no margin and no profit and loss.
 from .value_objects import (
     FuturesContract,
     FuturesProductReference,
+    FuturesProductSpecification,
     InvalidFuturesContractError,
     InvalidFuturesProductReferenceError,
+    InvalidFuturesProductSpecificationError,
 )
 
 __all__ = [
     "FuturesContract",
     "FuturesProductReference",
+    "FuturesProductSpecification",
     "InvalidFuturesContractError",
     "InvalidFuturesProductReferenceError",
+    "InvalidFuturesProductSpecificationError",
 ]
