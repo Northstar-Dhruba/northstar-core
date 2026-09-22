@@ -12,13 +12,17 @@ Options.
 from .value_objects import (
     ExpirationDate,
     InvalidExpirationDateError,
+    InvalidQuoteValueError,
     InvalidUnderlyingReferenceError,
+    QuoteValue,
     UnderlyingReference,
 )
 
 __all__ = [
     "ExpirationDate",
     "InvalidExpirationDateError",
+    "InvalidQuoteValueError",
     "InvalidUnderlyingReferenceError",
+    "QuoteValue",
     "UnderlyingReference",
 ]

@@ -85,8 +85,8 @@ def _imported_names(tree: ast.Module) -> set[str]:
 
 def test_both_packages_have_sources_to_inspect() -> None:
     """Guards every sweep below from passing vacuously."""
-    assert len(_DERIVATIVES_FILES) >= 3
-    assert len(_FUTURES_FILES) >= 4
+    assert len(_DERIVATIVES_FILES) >= 4
+    assert len(_FUTURES_FILES) >= 6
 
 
 @pytest.mark.parametrize("path", _ALL_FILES, ids=lambda path: path.name)
@@ -164,7 +164,9 @@ def test_the_derivatives_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(derivatives.__all__) == [
         "ExpirationDate",
         "InvalidExpirationDateError",
+        "InvalidQuoteValueError",
         "InvalidUnderlyingReferenceError",
+        "QuoteValue",
         "UnderlyingReference",
     ]
 
@@ -172,9 +174,11 @@ def test_the_derivatives_surface_is_exactly_the_approved_vocabulary() -> None:
 def test_the_futures_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(futures.__all__) == [
         "FuturesContract",
+        "FuturesOHLCVBar",
         "FuturesProductReference",
         "FuturesProductSpecification",
         "InvalidFuturesContractError",
+        "InvalidFuturesOHLCVBarError",
         "InvalidFuturesProductReferenceError",
         "InvalidFuturesProductSpecificationError",
     ]
@@ -199,6 +203,9 @@ def test_no_deferred_concept_is_exported_yet() -> None:
         "ContinuousFuturesContract",
         "ContractSize",
         "TickValue",
+        "OpenInterest",
+        "QuotationUnit",
+        "AdjustedClose",
     ):
         assert deferred not in exported
 

@@ -11,6 +11,7 @@ here imports ListingReference. This package models no continuous contract, no
 rollover, no margin and no profit and loss.
 """
 
+from .market_data import FuturesOHLCVBar, InvalidFuturesOHLCVBarError
 from .value_objects import (
     FuturesContract,
     FuturesProductReference,
@@ -22,9 +23,11 @@ from .value_objects import (
 
 __all__ = [
     "FuturesContract",
+    "FuturesOHLCVBar",
     "FuturesProductReference",
     "FuturesProductSpecification",
     "InvalidFuturesContractError",
+    "InvalidFuturesOHLCVBarError",
     "InvalidFuturesProductReferenceError",
     "InvalidFuturesProductSpecificationError",
 ]
