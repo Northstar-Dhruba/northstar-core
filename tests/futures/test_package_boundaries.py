@@ -177,10 +177,12 @@ def test_the_futures_surface_is_exactly_the_approved_vocabulary() -> None:
         "FuturesOHLCVBar",
         "FuturesProductReference",
         "FuturesProductSpecification",
+        "FuturesReplaySnapshot",
         "InvalidFuturesContractError",
         "InvalidFuturesOHLCVBarError",
         "InvalidFuturesProductReferenceError",
         "InvalidFuturesProductSpecificationError",
+        "InvalidFuturesReplaySnapshotError",
     ]
 
 
