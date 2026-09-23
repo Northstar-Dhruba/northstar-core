@@ -18,9 +18,10 @@ from enum import StrEnum
 class OrderSide(StrEnum):
     """Closed vocabulary for the direction of one simulated execution.
 
-    BUY increases a Position; SELL reduces one. Reduction below zero is not
-    representable, because paper trading is long-only until a signed quantity
-    concept is approved.
+    BUY and SELL name trade direction only. What a SELL does to exposure --
+    reduce or close a long, open or increase a short, or reverse long to short
+    -- is decided by execution policy, not by this value. The equity Position
+    is long-only, so equity paper trading never sells below zero.
     """
 
     BUY = "BUY"
