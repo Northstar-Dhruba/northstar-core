@@ -5,8 +5,14 @@ from .strategy import InvalidStrategyError, Strategy
 from .value_objects import (
     AssetAnalysis,
     ExplanationReason,
+    FuturesAssetAnalysis,
+    FuturesMarketObservationContext,
+    FuturesRecommendation,
     InvalidAssetAnalysisError,
     InvalidExplanationReasonError,
+    InvalidFuturesAssetAnalysisError,
+    InvalidFuturesMarketObservationContextError,
+    InvalidFuturesRecommendationError,
     InvalidMarketObservationContextError,
     InvalidRecommendationActionError,
     InvalidRecommendationError,
@@ -25,6 +31,12 @@ from .value_objects import (
 
 __all__ = [
     "AssetAnalysis",
+    "InvalidFuturesRecommendationError",
+    "InvalidFuturesMarketObservationContextError",
+    "InvalidFuturesAssetAnalysisError",
+    "FuturesRecommendation",
+    "FuturesMarketObservationContext",
+    "FuturesAssetAnalysis",
     "AssetAnalysisGenerator",
     "ExplanationReason",
     "InvalidAssetAnalysisError",

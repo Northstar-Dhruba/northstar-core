@@ -6,8 +6,14 @@ its bar is built on Listing identity and Price, and neither applies here.
 """
 
 from .futures_ohlcv_bar import FuturesOHLCVBar, InvalidFuturesOHLCVBarError
+from .futures_replay_snapshot import (
+    FuturesReplaySnapshot,
+    InvalidFuturesReplaySnapshotError,
+)
 
 __all__ = [
     "FuturesOHLCVBar",
+    "FuturesReplaySnapshot",
     "InvalidFuturesOHLCVBarError",
+    "InvalidFuturesReplaySnapshotError",
 ]
