@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from northstar_core.foundation.exceptions.validation import ValidationError
 from northstar_core.strategy.value_objects import (
     AssetAnalysis,
+    FuturesAssetAnalysis,
+    FuturesRecommendation,
     Recommendation,
     RecommendationAction,
     StrategyIdentity,
@@ -74,8 +76,38 @@ class Strategy:
             point_in_time=asset_analysis.point_in_time,
         )
 
+    def evaluate_futures(self, asset_analysis: FuturesAssetAnalysis) -> FuturesRecommendation:
+        """Produce the directional research view for one FuturesAssetAnalysis.
+
+        The decision policy is the one ``evaluate`` applies, not a copy of it:
+        a strong bullish signal produces BUY, a strong bearish signal produces
+        SELL, and conflicting or all other signal sets produce HOLD.
+
+        BUY, HOLD and SELL are directional research classifications only. SELL
+        does not establish a short position, the reduction of a long, an order
+        side, an exposure, a margin requirement, a contract multiplier or any
+        executable futures behavior; none of those exists in this domain, and
+        the equity reading of SELL as "reduce a long" must not be carried
+        across. The view records which way the analysis leans so that its
+        accuracy can be measured.
+        """
+        if asset_analysis is None:
+            raise InvalidStrategyError("Strategy futures asset analysis cannot be None.")
+        if not isinstance(asset_analysis, FuturesAssetAnalysis):
+            raise InvalidStrategyError(
+                "Strategy futures asset analysis must be a FuturesAssetAnalysis value."
+            )
+
+        action = RecommendationAction(self._select_action(asset_analysis))
+        return FuturesRecommendation(
+            action=action,
+            asset_analysis=asset_analysis,
+            strategy_identity=self.strategy_identity,
+            point_in_time=asset_analysis.point_in_time,
+        )
+
     @staticmethod
-    def _select_action(asset_analysis: AssetAnalysis) -> str:
+    def _select_action(asset_analysis: AssetAnalysis | FuturesAssetAnalysis) -> str:
         normalized_signals = {signal.casefold() for signal in asset_analysis.summarized_signals}
         has_strong_bullish_signal = _STRONG_BULLISH_SIGNAL in normalized_signals
         has_strong_bearish_signal = _STRONG_BEARISH_SIGNAL in normalized_signals

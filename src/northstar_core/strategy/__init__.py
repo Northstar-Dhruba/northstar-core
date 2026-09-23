@@ -1,6 +1,7 @@
 """Strategy bounded context package."""
 
 from .asset_analysis_generator import AssetAnalysisGenerator
+from .futures_asset_analysis_generator import FuturesAssetAnalysisGenerator
 from .strategy import InvalidStrategyError, Strategy
 from .value_objects import (
     AssetAnalysis,
@@ -37,6 +38,7 @@ __all__ = [
     "FuturesRecommendation",
     "FuturesMarketObservationContext",
     "FuturesAssetAnalysis",
+    "FuturesAssetAnalysisGenerator",
     "AssetAnalysisGenerator",
     "ExplanationReason",
     "InvalidAssetAnalysisError",
