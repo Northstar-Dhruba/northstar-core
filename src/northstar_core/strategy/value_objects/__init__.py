@@ -13,6 +13,11 @@ from .futures_recommendation import (
     FuturesRecommendation,
     InvalidFuturesRecommendationError,
 )
+from .futures_recommendation_outcome import (
+    FuturesRecommendationOutcome,
+    FuturesRecommendationOutcomeUnavailableReason,
+    InvalidFuturesRecommendationOutcomeError,
+)
 from .market_observation_context import (
     InvalidMarketObservationContextError,
     MarketObservationContext,
@@ -44,6 +49,9 @@ __all__ = [
     "FuturesRecommendation",
     "FuturesMarketObservationContext",
     "FuturesAssetAnalysis",
+    "FuturesRecommendationOutcome",
+    "FuturesRecommendationOutcomeUnavailableReason",
+    "InvalidFuturesRecommendationOutcomeError",
     "ExplanationReason",
     "InvalidAssetAnalysisError",
     "InvalidExplanationReasonError",
