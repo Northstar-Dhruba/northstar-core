@@ -174,12 +174,14 @@ def test_the_derivatives_surface_is_exactly_the_approved_vocabulary() -> None:
 def test_the_futures_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(futures.__all__) == [
         "FuturesContract",
+        "FuturesContractEconomics",
         "FuturesOHLCVBar",
         "FuturesPointValue",
         "FuturesProductEconomics",
         "FuturesProductReference",
         "FuturesProductSpecification",
         "FuturesReplaySnapshot",
+        "InvalidFuturesContractEconomicsError",
         "InvalidFuturesContractError",
         "InvalidFuturesOHLCVBarError",
         "InvalidFuturesPointValueError",
@@ -202,6 +204,8 @@ def test_no_deferred_concept_is_exported_yet() -> None:
     for deferred in (
         "FuturesContractIdentity",
         "ContractMultiplier",
+        "ContractLotSize",
+        "LotSize",
         "TickSize",
         "ContractMonth",
         "LastTradingDay",
@@ -221,5 +225,12 @@ def test_no_class_defines_a_deferred_concept() -> None:
         for node in ast.walk(_parse(path)):
             if isinstance(node, ast.ClassDef):
                 lowered = node.name.lower()
-                for deferred in ("multiplier", "ticksize", "continuous", "rollover", "margin"):
+                for deferred in (
+                    "multiplier",
+                    "lotsize",
+                    "ticksize",
+                    "continuous",
+                    "rollover",
+                    "margin",
+                ):
                     assert deferred not in lowered, f"{path.name} defines {node.name}."

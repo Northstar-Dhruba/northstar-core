@@ -56,7 +56,11 @@ def test_the_settlement_currency_is_owned_by_the_point_value() -> None:
     assert "settlement_currency" not in FuturesProductEconomics.__slots__
 
 
-def test_every_expiry_of_a_product_shares_one_economics_value() -> None:
+def test_product_economics_are_keyed_by_product_alone() -> None:
+    """The retained product-level shape: every expiry of a product maps to one value.
+
+    This is why the type is no longer the P&L authority; FuturesContractEconomics is.
+    """
     product = FuturesProductReference(Symbol("ES"), ExchangeCode("CME"))
     december = FuturesContract(product, ExpirationDate("2026-12-18"))
     march = FuturesContract(product, ExpirationDate("2027-03-19"))
