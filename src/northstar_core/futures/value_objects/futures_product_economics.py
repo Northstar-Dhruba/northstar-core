@@ -1,18 +1,20 @@
-"""The economic facts profit and loss needs about one futures product.
+"""Product-level futures economics, retained for historical reference.
 
-Economics belong to the exchange-defined product, not to a contract: every
-expiry of a product shares them, so ES December and ES March both resolve to
-the economics of ES@CME while remaining distinct contracts, positions and
-records.
+This value states one point value for every expiry of an exchange-defined
+product, so ES December and ES March both resolve to the economics of ES@CME.
+It was the profit and loss authority of the original ES reference MVP, and it
+is kept unchanged so that history recorded under that model stays readable.
+
+It is no longer the profit and loss authority. A product does not determine
+its point value: an exchange can revise a contract size so that expiries of one
+product trade side by side with different sizes. Profit and loss now resolves
+FuturesContractEconomics, keyed by the individual contract, and product
+economics are never read in its place or as a fallback for it.
 
 The only fact carried is the point value, which already holds both the
 settlement-currency rate per quote point and the settlement currency itself.
 There is deliberately no second currency field that could disagree with it, and
-no tick size, tick value, notional or margin: nothing consumes them yet.
-
-Economics are assumed constant for one product reference. A product whose
-specification changes over time would need effective-dated economics, which
-are deferred.
+no tick size, tick value, notional or margin.
 """
 
 from __future__ import annotations
@@ -57,7 +59,7 @@ def _validate_point_value(value: FuturesPointValue) -> FuturesPointValue:
 
 @dataclass(frozen=True, slots=True)
 class FuturesProductEconomics:
-    """Immutable economics of one exchange-defined futures product."""
+    """Immutable product-level economics; superseded by FuturesContractEconomics for P&L."""
 
     reference: FuturesProductReference
     point_value: FuturesPointValue
