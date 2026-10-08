@@ -8,6 +8,28 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Options – Contract Foundation
+
+#### Added
+
+- `northstar_core.options` package, a sibling of `northstar_core.futures` above the shared derivatives layer.
+- `OptionRight` closed vocabulary: `CALL`, `PUT`.
+- `OptionStrike` value object: canonical Decimal, strictly positive, no currency, ordered, no arithmetic.
+- `OptionProductReference` value object: product code and exchange code of one exchange-defined option product.
+- `OptionProductSpecification` value object: an option product and the underlying it is written on.
+- `OptionContract` value object identified by `(product, expiration_date, strike, right)`.
+- `InvalidOptionStrikeError`, `InvalidOptionProductReferenceError`, `InvalidOptionProductSpecificationError` and `InvalidOptionContractError`.
+- Options contract test suites and package-boundary tests under `tests/options`.
+
+#### Engineering
+
+- Options depend only on Foundation and Derivatives and never import Futures; no Futures, Derivatives or Foundation type was changed.
+- Underlying, lot size, weekly or monthly classification, exercise and settlement style, and provider identifiers are excluded from option contract identity.
+
+#### Documentation
+
+- ADR-010 Option Contract Identity.
+
 ## [0.4.0] - 2026-09-14
 
 ### Added
