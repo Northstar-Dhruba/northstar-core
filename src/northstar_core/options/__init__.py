@@ -18,12 +18,18 @@ shared derivatives package, and neither imports the other: an option product
 that displays as ``NIFTY@NSE`` is a different type from the futures product of
 the same name, and an option point value never values a futures contract.
 
+An option daily bar, OptionOHLCVBar, records one exact contract's premiums and
+contract-count volume over one interval, stamped at the interval's completion.
+It carries no open interest, provider metadata, bid or ask, volatility or
+sensitivity.
+
 Derivative identity is kept separate from market-listing identity, so nothing
-here imports ListingReference. This package models no contract count, market
-data, position, execution, profit and loss calculation, exercise, assignment,
-settlement, volatility or sensitivity, and no strategy of several legs.
+here imports ListingReference. This package models no contract count, position,
+execution, profit and loss calculation, exercise, assignment, settlement,
+volatility or sensitivity, and no strategy of several legs.
 """
 
+from .market_data import InvalidOptionOHLCVBarError, OptionOHLCVBar
 from .value_objects import (
     InvalidOptionContractEconomicsError,
     InvalidOptionContractError,
@@ -45,6 +51,7 @@ from .value_objects import (
 __all__ = [
     "InvalidOptionContractEconomicsError",
     "InvalidOptionContractError",
+    "InvalidOptionOHLCVBarError",
     "InvalidOptionPointValueError",
     "InvalidOptionPremiumError",
     "InvalidOptionProductReferenceError",
@@ -52,6 +59,7 @@ __all__ = [
     "InvalidOptionStrikeError",
     "OptionContract",
     "OptionContractEconomics",
+    "OptionOHLCVBar",
     "OptionPointValue",
     "OptionPremium",
     "OptionProductReference",
