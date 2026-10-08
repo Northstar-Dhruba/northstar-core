@@ -8,6 +8,25 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Options – Contract-Scoped Economics
+
+#### Added
+
+- `OptionPremium` value object: canonical Decimal, zero or greater, no currency, ordered, no arithmetic.
+- `OptionPointValue` value object: settlement currency per premium point per option contract; amount greater than zero, not ordered, no arithmetic.
+- `OptionContractEconomics` value object keyed by the complete `OptionContract`, with the settlement currency derived from its point value.
+- `InvalidOptionPremiumError`, `InvalidOptionPointValueError` and `InvalidOptionContractEconomicsError`.
+- Contract test suites for the three values.
+
+#### Engineering
+
+- Released `premium`, `pointvalue` and `economics` from the Options deferred-concept denylist; every other boundary rule is unchanged.
+- Lot size is folded into the point value; no lot-size, multiplier, contract-count or P&L concept was introduced, and no Futures type was changed.
+
+#### Documentation
+
+- ADR-011 Contract-Scoped Option Economics.
+
 ### Options – Contract Foundation
 
 #### Added

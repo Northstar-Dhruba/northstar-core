@@ -116,9 +116,6 @@ _DEFERRED_FRAGMENTS = (
     "multiplier",
     "pnl",
     "profit",
-    "premium",
-    "pointvalue",
-    "economics",
     "contractcount",
     "settlement",
     "chain",
@@ -132,11 +129,17 @@ _DEFERRED_FRAGMENTS = (
 )
 
 _APPROVED_SURFACE = [
+    "InvalidOptionContractEconomicsError",
     "InvalidOptionContractError",
+    "InvalidOptionPointValueError",
+    "InvalidOptionPremiumError",
     "InvalidOptionProductReferenceError",
     "InvalidOptionProductSpecificationError",
     "InvalidOptionStrikeError",
     "OptionContract",
+    "OptionContractEconomics",
+    "OptionPointValue",
+    "OptionPremium",
     "OptionProductReference",
     "OptionProductSpecification",
     "OptionRight",
@@ -181,12 +184,15 @@ def test_the_package_has_source_files_to_inspect() -> None:
     assert {path.name for path in _SOURCE_FILES} == {
         "__init__.py",
         "option_contract.py",
+        "option_contract_economics.py",
+        "option_point_value.py",
+        "option_premium.py",
         "option_product_reference.py",
         "option_product_specification.py",
         "option_right.py",
         "option_strike.py",
     }
-    assert len(_SOURCE_FILES) == 7
+    assert len(_SOURCE_FILES) == 10
 
 
 # -- dependency direction -----------------------------------------------------------
@@ -290,6 +296,39 @@ def test_no_class_defines_a_deferred_concept() -> None:
         lowered = name.lower()
         for fragment in _DEFERRED_FRAGMENTS:
             assert fragment not in lowered, f"{name} defines deferred concept {fragment}."
+
+
+def test_the_deferred_denylist_is_exactly_the_approved_set() -> None:
+    """INDIA-OPT-2 approved premium, point value and economics; nothing else was released."""
+    assert set(_DEFERRED_FRAGMENTS) == {
+        "greek",
+        "delta",
+        "gamma",
+        "theta",
+        "vega",
+        "impliedvolatility",
+        "volatility",
+        "margin",
+        "exercise",
+        "assignment",
+        "leg",
+        "spread",
+        "lotsize",
+        "multiplier",
+        "pnl",
+        "profit",
+        "contractcount",
+        "settlement",
+        "chain",
+        "position",
+        "fill",
+        "broker",
+        "provider",
+        "instrumentkey",
+        "tradingsymbol",
+        "derivativecontract",
+    }
+    assert not {"premium", "pointvalue", "economics"} & set(_DEFERRED_FRAGMENTS)
 
 
 def test_the_classes_defined_are_exactly_the_approved_types() -> None:
