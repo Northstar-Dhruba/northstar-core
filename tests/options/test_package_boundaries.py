@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 
 import northstar_core.options as options
-from northstar_core.options import value_objects
+from northstar_core.options import market_data, value_objects
 
 _OPTIONS_ROOT = Path(options.__file__).parent
 _SOURCE_FILES = tuple(
@@ -94,9 +94,11 @@ _FORBIDDEN_NAMES = frozenset(
         "PortfolioIdentity",
         "Price",
         "Money",
-        "Quantity",
     }
 )
+
+# Quantity is allowed deliberately (INDIA-OPT-4B), and only for OptionOHLCVBar volume.
+_QUANTITY_MODULES = frozenset({"option_ohlcv_bar.py"})
 
 # Concepts deferred to later milestones; none may appear as a class or export.
 _DEFERRED_FRAGMENTS = (
@@ -128,7 +130,12 @@ _DEFERRED_FRAGMENTS = (
     "derivativecontract",
 )
 
-_APPROVED_SURFACE = [
+_MARKET_DATA_SURFACE = [
+    "InvalidOptionOHLCVBarError",
+    "OptionOHLCVBar",
+]
+
+_VALUE_OBJECT_SURFACE = [
     "InvalidOptionContractEconomicsError",
     "InvalidOptionContractError",
     "InvalidOptionPointValueError",
@@ -145,6 +152,8 @@ _APPROVED_SURFACE = [
     "OptionRight",
     "OptionStrike",
 ]
+
+_APPROVED_SURFACE = sorted(_VALUE_OBJECT_SURFACE + _MARKET_DATA_SURFACE)
 
 
 def _parse(path: Path) -> ast.Module:
@@ -185,6 +194,7 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "__init__.py",
         "option_contract.py",
         "option_contract_economics.py",
+        "option_ohlcv_bar.py",
         "option_point_value.py",
         "option_premium.py",
         "option_product_reference.py",
@@ -192,7 +202,7 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "option_right.py",
         "option_strike.py",
     }
-    assert len(_SOURCE_FILES) == 10
+    assert len(_SOURCE_FILES) == 12
 
 
 # -- dependency direction -----------------------------------------------------------
@@ -259,13 +269,27 @@ def test_the_public_surface_is_exactly_the_approved_vocabulary() -> None:
     assert sorted(options.__all__) == _APPROVED_SURFACE
 
 
-def test_the_value_objects_package_exports_the_same_surface() -> None:
-    assert sorted(value_objects.__all__) == _APPROVED_SURFACE
+def test_the_value_objects_package_exports_its_part_of_the_surface() -> None:
+    assert sorted(value_objects.__all__) == _VALUE_OBJECT_SURFACE
+
+
+def test_the_market_data_package_exports_its_part_of_the_surface() -> None:
+    assert sorted(market_data.__all__) == _MARKET_DATA_SURFACE
 
 
 def test_every_exported_name_is_importable() -> None:
     for name in options.__all__:
-        assert getattr(options, name) is getattr(value_objects, name)
+        owner = market_data if name in _MARKET_DATA_SURFACE else value_objects
+        assert getattr(options, name) is getattr(owner, name)
+
+
+def test_quantity_is_imported_only_by_the_option_bar() -> None:
+    """The one deliberate exception to the equity-value ban, and nowhere else."""
+    importers = {path.name for path in _SOURCE_FILES if "Quantity" in _imported_names(_parse(path))}
+
+    assert importers == _QUANTITY_MODULES
+    for name in ("Price", "Money"):
+        assert name in _FORBIDDEN_NAMES
 
 
 def test_every_exported_type_is_defined_in_this_package() -> None:

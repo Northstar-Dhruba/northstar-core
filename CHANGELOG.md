@@ -8,6 +8,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Options – Daily Market Data
+
+#### Added
+
+- `OptionOHLCVBar` in `northstar_core.options.market_data`: one exact `OptionContract`, `OptionPremium` open, high, low and close, and a whole-number `Quantity` of option contracts, identified by `(contract, point_in_time, timeframe)`.
+- `InvalidOptionOHLCVBarError`.
+- `OptionOHLCVBar` contract test suite.
+
+#### Engineering
+
+- The Options boundary test now allows `Quantity`, only in the option bar module; every other boundary rule is unchanged.
+- The bar carries no open interest, provider metadata, bid or ask, volatility or Greeks; no Futures type was changed.
+
+#### Documentation
+
+- ADR-014 Canonical Option Daily Market Data and Session Semantics.
+
 ### Options – Contract-Scoped Economics
 
 #### Added
