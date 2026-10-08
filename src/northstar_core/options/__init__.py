@@ -23,13 +23,24 @@ contract-count volume over one interval, stamped at the interval's completion.
 It carries no open interest, provider metadata, bid or ask, volatility or
 sensitivity.
 
+An option chain snapshot, OptionChainSnapshot, is one expiration's listed
+contracts at one instant, each with its daily bar at that instant when one is
+held. Listed, observed and selected stay distinct: the snapshot selects nothing.
+
 Derivative identity is kept separate from market-listing identity, so nothing
 here imports ListingReference. This package models no contract count, position,
 execution, profit and loss calculation, exercise, assignment, settlement,
 volatility or sensitivity, and no strategy of several legs.
 """
 
-from .market_data import InvalidOptionOHLCVBarError, OptionOHLCVBar
+from .market_data import (
+    InvalidOptionChainEntryError,
+    InvalidOptionChainSnapshotError,
+    InvalidOptionOHLCVBarError,
+    OptionChainEntry,
+    OptionChainSnapshot,
+    OptionOHLCVBar,
+)
 from .value_objects import (
     InvalidOptionContractEconomicsError,
     InvalidOptionContractError,
@@ -49,6 +60,8 @@ from .value_objects import (
 )
 
 __all__ = [
+    "InvalidOptionChainEntryError",
+    "InvalidOptionChainSnapshotError",
     "InvalidOptionContractEconomicsError",
     "InvalidOptionContractError",
     "InvalidOptionOHLCVBarError",
@@ -57,6 +70,8 @@ __all__ = [
     "InvalidOptionProductReferenceError",
     "InvalidOptionProductSpecificationError",
     "InvalidOptionStrikeError",
+    "OptionChainEntry",
+    "OptionChainSnapshot",
     "OptionContract",
     "OptionContractEconomics",
     "OptionOHLCVBar",

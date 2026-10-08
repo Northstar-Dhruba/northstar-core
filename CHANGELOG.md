@@ -8,6 +8,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Options – Point-in-Time Chain Snapshot
+
+#### Added
+
+- `OptionChainEntry` in `northstar_core.options.market_data`: one exact `OptionContract` and its daily `OptionOHLCVBar`, or `None` when no canonical daily bar is held at the snapshot instant.
+- `OptionChainSnapshot`: one `OptionProductReference`, one `ExpirationDate`, one `as_of` instant and a non-empty tuple of unique entries, ordered by strike ascending then CALL before PUT; every bar present is the `1d` bar stamped exactly at `as_of`.
+- `InvalidOptionChainEntryError` and `InvalidOptionChainSnapshotError`.
+- Contract test suite for both values.
+
+#### Engineering
+
+- Released `chain` from the Options deferred-concept denylist; every other boundary rule is unchanged.
+- The snapshot selects nothing and carries no trading date, underlying value, open interest, provider metadata or selection state; no Futures type was changed.
+
+#### Documentation
+
+- ADR-016 Point-in-Time Option Chain Snapshot.
+
 ### Options – Daily Market Data
 
 #### Added
