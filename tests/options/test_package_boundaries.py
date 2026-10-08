@@ -120,7 +120,6 @@ _DEFERRED_FRAGMENTS = (
     "profit",
     "contractcount",
     "settlement",
-    "chain",
     "position",
     "fill",
     "broker",
@@ -131,7 +130,11 @@ _DEFERRED_FRAGMENTS = (
 )
 
 _MARKET_DATA_SURFACE = [
+    "InvalidOptionChainEntryError",
+    "InvalidOptionChainSnapshotError",
     "InvalidOptionOHLCVBarError",
+    "OptionChainEntry",
+    "OptionChainSnapshot",
     "OptionOHLCVBar",
 ]
 
@@ -192,6 +195,7 @@ def test_the_package_has_source_files_to_inspect() -> None:
     """Guards every sweep below from passing vacuously."""
     assert {path.name for path in _SOURCE_FILES} == {
         "__init__.py",
+        "option_chain_snapshot.py",
         "option_contract.py",
         "option_contract_economics.py",
         "option_ohlcv_bar.py",
@@ -202,7 +206,7 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "option_right.py",
         "option_strike.py",
     }
-    assert len(_SOURCE_FILES) == 12
+    assert len(_SOURCE_FILES) == 13
 
 
 # -- dependency direction -----------------------------------------------------------
@@ -323,7 +327,7 @@ def test_no_class_defines_a_deferred_concept() -> None:
 
 
 def test_the_deferred_denylist_is_exactly_the_approved_set() -> None:
-    """INDIA-OPT-2 approved premium, point value and economics; nothing else was released."""
+    """INDIA-OPT-2 released premium, point value and economics; INDIA-OPT-5 released chain."""
     assert set(_DEFERRED_FRAGMENTS) == {
         "greek",
         "delta",
@@ -343,7 +347,6 @@ def test_the_deferred_denylist_is_exactly_the_approved_set() -> None:
         "profit",
         "contractcount",
         "settlement",
-        "chain",
         "position",
         "fill",
         "broker",
@@ -352,7 +355,7 @@ def test_the_deferred_denylist_is_exactly_the_approved_set() -> None:
         "tradingsymbol",
         "derivativecontract",
     }
-    assert not {"premium", "pointvalue", "economics"} & set(_DEFERRED_FRAGMENTS)
+    assert not {"premium", "pointvalue", "economics", "chain"} & set(_DEFERRED_FRAGMENTS)
 
 
 def test_the_classes_defined_are_exactly_the_approved_types() -> None:
