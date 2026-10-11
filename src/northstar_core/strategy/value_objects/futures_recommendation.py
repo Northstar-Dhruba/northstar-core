@@ -2,23 +2,26 @@
 
 What BUY, HOLD and SELL mean here
 ----------------------------------
-They are directional research views and nothing more. A FuturesRecommendation
-is a statement about which way the analysis leans, produced so that its
-subsequent accuracy can be measured.
+They are research actions and nothing more. A FuturesRecommendation is a
+research assessment: a statement about which way the analysis leans, produced
+so that its subsequent accuracy can be measured. It is not an actionable trade
+setup, and it carries no entry, stop, target or validity.
 
-In particular SELL does **not** mean any of the following, because none of them
-exists in this domain yet:
+In particular SELL is a research action. It is not intrinsically a SHORT
+recommendation, it does not by itself open, reduce or close any position, and
+it is not an order.
 
-- open a short futures position
-- reduce or close a long position
-- create an executable order of any kind
+What happens to a SELL downstream is decided by policies outside this type.
+The futures paper-trading target-position policy in Application independently
+maps a frozen SELL to a negative target exposure (and BUY to a positive one);
+the order side of the resulting simulated trade then follows from the current
+position. The equity paper-trading model, long-only by design, reads SELL as
+"reduce or close a long". Neither reading belongs to this type.
 
-The distinction matters because the equity paper-trading model reads SELL as
-"reduce or close a long", that model being long-only by design. For futures the
-same word would naturally mean "go short", which is a different action against
-a different exposure. Nothing here settles that question, and a reader must not
-carry the equity reading across. When futures execution arrives, the meaning of
-SELL has to be decided explicitly rather than inherited from either side.
+Actionable futures recommendations are a separate concept: they will be
+FuturesTradeRecommendation values in northstar_core.recommendations.futures,
+with an explicit LONG or SHORT trade direction. Research action, target
+exposure, trade direction and order side are distinct concepts (ADR-017).
 
 There is correspondingly no quantity, no contract multiplier, no tick, no
 margin, no exposure and no profit or loss. A recommendation carries a direction
