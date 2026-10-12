@@ -1,4 +1,4 @@
-"""Structural guarantees for the futures trade recommendation package (ADR-017).
+"""Structural guarantees for the futures trade recommendation package (ADR-017, ADR-018).
 
 The package may build on Foundation, Derivatives, Futures and Strategy, and on
 nothing else: never Paper Trading or Broker Execution, never a clock, randomness,
@@ -20,7 +20,7 @@ import pytest
 import northstar_core
 import northstar_core.recommendations as recommendations
 import northstar_core.recommendations.futures as futures_recommendations
-from northstar_core.recommendations.futures import lifecycle, selection, value_objects
+from northstar_core.recommendations.futures import generation, lifecycle, selection, value_objects
 
 _CORE_ROOT = Path(northstar_core.__file__).parent
 _PACKAGE_ROOT = Path(recommendations.__file__).parent
@@ -45,10 +45,16 @@ _ALLOWED_CORE_PREFIXES = (
 
 _ALLOWED_STANDARD_MODULES = frozenset({"__future__", "dataclasses", "enum", "functools"})
 
-# Research types that only candidate selection may consume (ADR-017 permits
-# Strategy types; the trade setup and lifecycle stay free of research vocabulary).
+# Exact arithmetic for price levels (ADR-018); only generation may use it.
+_GENERATION_STANDARD_MODULES = frozenset({"decimal", "fractions"})
+
+# Research types that only candidate selection and generation may consume
+# (ADR-017 permits Strategy types; generation maps BUY/SELL to LONG/SHORT under
+# ADR-018; the trade setup and lifecycle stay free of research vocabulary).
 _RESEARCH_NAMES = frozenset({"RecommendationAction", "FuturesRecommendation"})
 _SELECTION_DIR = "selection"
+_GENERATION_DIR = "generation"
+_RESEARCH_CONSUMERS = frozenset({_SELECTION_DIR, _GENERATION_DIR})
 
 _FORBIDDEN_CORE_PREFIXES = (
     "northstar_core.paper_trading",
@@ -190,7 +196,29 @@ _SELECTION_SURFACE = [
     "InvalidFuturesResearchDecisionError",
 ]
 
-_APPROVED_SURFACE = sorted(_VALUE_OBJECT_SURFACE + _LIFECYCLE_SURFACE + _SELECTION_SURFACE)
+_GENERATION_SURFACE = [
+    "FuturesCandidateEvidence",
+    "FuturesGenerationRejection",
+    "FuturesRecommendationGeneration",
+    "FuturesRecommendationGenerationPolicy",
+    "FuturesRecommendationProposal",
+    "FuturesRecommendationSessionWindow",
+    "GenerationRejectionReason",
+    "InvalidFuturesCandidateEvidenceError",
+    "InvalidFuturesGenerationRejectionError",
+    "InvalidFuturesRecommendationGenerationError",
+    "InvalidFuturesRecommendationGenerationPolicyError",
+    "InvalidFuturesRecommendationProposalError",
+    "InvalidFuturesRecommendationSessionWindowError",
+    "InvalidPriceMovementUnitError",
+    "InvalidRewardToRiskError",
+    "PriceMovementUnit",
+    "RewardToRisk",
+]
+
+_APPROVED_SURFACE = sorted(
+    _VALUE_OBJECT_SURFACE + _LIFECYCLE_SURFACE + _SELECTION_SURFACE + _GENERATION_SURFACE
+)
 
 
 def _parse(path: Path) -> ast.Module:
@@ -213,6 +241,12 @@ def _imported_modules(tree: ast.Module) -> set[str]:
 
 def _imported_names(tree: ast.Module) -> set[str]:
     return {name for _, names in _absolute_imports(tree) for name in names}
+
+
+def _subpackage(path: Path) -> str:
+    """Return the futures sub-package a file belongs to, or "" for a package initializer."""
+    parts = path.relative_to(_PACKAGE_ROOT).parts
+    return parts[1] if len(parts) > 2 else ""
 
 
 def _class_names() -> set[str]:
@@ -249,6 +283,15 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "futures/selection/candidate_selection_criteria.py",
         "futures/selection/recommendation_candidate.py",
         "futures/selection/research_decision.py",
+        "futures/generation/__init__.py",
+        "futures/generation/_price_levels.py",
+        "futures/generation/candidate_evidence.py",
+        "futures/generation/generation_policy.py",
+        "futures/generation/generation_rejection.py",
+        "futures/generation/recommendation_generation.py",
+        "futures/generation/recommendation_proposal.py",
+        "futures/generation/reward_to_risk.py",
+        "futures/generation/session_window.py",
     }
     assert len(_OTHER_CORE_FILES) > 100
 
@@ -258,8 +301,11 @@ def test_the_package_has_source_files_to_inspect() -> None:
 
 @pytest.mark.parametrize("path", _SOURCE_FILES, ids=lambda path: path.name)
 def test_every_import_is_on_the_approved_list(path: Path) -> None:
+    standard = _ALLOWED_STANDARD_MODULES
+    if _GENERATION_DIR in path.relative_to(_PACKAGE_ROOT).parts:
+        standard = standard | _GENERATION_STANDARD_MODULES
     for module in _imported_modules(_parse(path)):
-        allowed = module in _ALLOWED_STANDARD_MODULES or module.startswith(_ALLOWED_CORE_PREFIXES)
+        allowed = module in standard or module.startswith(_ALLOWED_CORE_PREFIXES)
         assert allowed, f"{path.name} imports unapproved module {module}."
 
 
@@ -301,7 +347,7 @@ def test_no_call_reads_a_clock_or_generates_an_identifier(path: Path) -> None:
 @pytest.mark.parametrize("path", _SOURCE_FILES, ids=lambda path: path.name)
 def test_no_execution_or_research_action_name_is_imported(path: Path) -> None:
     forbidden = _imported_names(_parse(path)) & _FORBIDDEN_NAMES
-    if _SELECTION_DIR in path.relative_to(_PACKAGE_ROOT).parts:
+    if _RESEARCH_CONSUMERS & set(path.relative_to(_PACKAGE_ROOT).parts):
         forbidden -= _RESEARCH_NAMES
 
     assert not forbidden, f"{path.name} imports {sorted(forbidden)}."
@@ -350,8 +396,18 @@ def test_importing_strategy_does_not_load_recommendations() -> None:
         "from northstar_core.recommendations.futures.lifecycle.recommendation_event "
         "import FuturesTradeRecommendationEvent",
         "import northstar_core.strategy; import northstar_core.recommendations.futures",
+        "import northstar_core.recommendations.futures.generation",
+        "from northstar_core.recommendations.futures.generation.recommendation_generation "
+        "import FuturesRecommendationGeneration",
     ],
-    ids=["lifecycle-first", "value-objects-first", "deep-module-first", "strategy-first"],
+    ids=[
+        "lifecycle-first",
+        "value-objects-first",
+        "deep-module-first",
+        "strategy-first",
+        "generation-first",
+        "deep-generation-module-first",
+    ],
 )
 def test_every_entry_point_imports_without_a_cycle(statement: str) -> None:
     assert "recommendations" in _loaded_contexts(statement)
@@ -380,15 +436,37 @@ def test_the_selection_package_exports_its_part_of_the_surface() -> None:
     assert sorted(selection.__all__) == _SELECTION_SURFACE
 
 
-def test_only_selection_consumes_research_types() -> None:
+def test_the_generation_package_exports_its_part_of_the_surface() -> None:
+    assert sorted(generation.__all__) == _GENERATION_SURFACE
+
+
+def test_only_selection_and_generation_consume_research_types() -> None:
     """The trade setup and lifecycle never see BUY/SELL/HOLD research vocabulary."""
     importers = {
-        path.relative_to(_PACKAGE_ROOT).parts[1]
+        _subpackage(path)
         for path in _SOURCE_FILES
         if _imported_names(_parse(path)) & _RESEARCH_NAMES
     }
 
-    assert importers == {_SELECTION_DIR}
+    assert importers == _RESEARCH_CONSUMERS
+
+
+def test_only_generation_uses_decimal_or_rational_arithmetic() -> None:
+    users = {
+        _subpackage(path)
+        for path in _SOURCE_FILES
+        if _imported_modules(_parse(path)) & _GENERATION_STANDARD_MODULES
+    }
+
+    assert users == {_GENERATION_DIR}
+
+
+def test_the_setup_lifecycle_and_selection_never_import_generation() -> None:
+    """Generation builds on F-2 and F-3; neither depends on it."""
+    for path in _SOURCE_FILES:
+        if _subpackage(path) in {"value_objects", "lifecycle", "selection"}:
+            for module in _imported_modules(_parse(path)):
+                assert ".generation" not in module, f"{path.name} imports {module}."
 
 
 def test_selection_never_assigns_a_trade_direction() -> None:
@@ -400,7 +478,9 @@ def test_selection_never_assigns_a_trade_direction() -> None:
 
 def test_every_exported_name_is_importable_from_its_owner() -> None:
     for name in futures_recommendations.__all__:
-        if name in _LIFECYCLE_SURFACE:
+        if name in _GENERATION_SURFACE:
+            owner = generation
+        elif name in _LIFECYCLE_SURFACE:
             owner = lifecycle
         elif name in _SELECTION_SURFACE:
             owner = selection
