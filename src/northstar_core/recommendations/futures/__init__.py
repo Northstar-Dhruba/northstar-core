@@ -21,6 +21,11 @@ direction and implements no mapping from research actions. It may build on
 Foundation, Derivatives, Futures and Strategy; Strategy never imports it, and it
 never imports Paper Trading or Broker Execution (ADR-017).
 
+Candidate selection (the ``selection`` sub-package) decides which frozen
+research decisions of one final session may be considered for a recommendation:
+BUY and SELL decisions of approved products and strategies, with their research
+action kept unchanged. A candidate is not a recommendation and has no direction.
+
 This package models no recommendation generation, price-level policy, tick
 alignment, sizing, margin, persistence, publication, notification, returns or
 profit and loss.
@@ -43,6 +48,19 @@ from .lifecycle import (
     RecommendationStatus,
     TimeExpiryEvidence,
 )
+from .selection import (
+    CandidateRejectionReason,
+    FuturesCandidateRejection,
+    FuturesCandidateSelection,
+    FuturesCandidateSelectionCriteria,
+    FuturesRecommendationCandidate,
+    FuturesResearchDecision,
+    InvalidFuturesCandidateRejectionError,
+    InvalidFuturesCandidateSelectionCriteriaError,
+    InvalidFuturesCandidateSelectionError,
+    InvalidFuturesRecommendationCandidateError,
+    InvalidFuturesResearchDecisionError,
+)
 from .value_objects import (
     EntryZone,
     FuturesResearchDecisionReference,
@@ -64,8 +82,14 @@ from .value_objects import (
 )
 
 __all__ = [
+    "CandidateRejectionReason",
     "CoverageDeficiency",
     "EntryZone",
+    "FuturesCandidateRejection",
+    "FuturesCandidateSelection",
+    "FuturesCandidateSelectionCriteria",
+    "FuturesRecommendationCandidate",
+    "FuturesResearchDecision",
     "FuturesResearchDecisionReference",
     "FuturesTradeRecommendation",
     "FuturesTradeRecommendationEvent",
@@ -73,6 +97,11 @@ __all__ = [
     "FuturesTradeRecommendationLifecycle",
     "IntrabarOrdering",
     "InvalidEntryZoneError",
+    "InvalidFuturesCandidateRejectionError",
+    "InvalidFuturesCandidateSelectionCriteriaError",
+    "InvalidFuturesCandidateSelectionError",
+    "InvalidFuturesRecommendationCandidateError",
+    "InvalidFuturesResearchDecisionError",
     "InvalidFuturesResearchDecisionReferenceError",
     "InvalidFuturesTradeRecommendationError",
     "InvalidFuturesTradeRecommendationEventError",

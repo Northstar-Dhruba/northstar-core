@@ -20,7 +20,7 @@ import pytest
 import northstar_core
 import northstar_core.recommendations as recommendations
 import northstar_core.recommendations.futures as futures_recommendations
-from northstar_core.recommendations.futures import lifecycle, value_objects
+from northstar_core.recommendations.futures import lifecycle, selection, value_objects
 
 _CORE_ROOT = Path(northstar_core.__file__).parent
 _PACKAGE_ROOT = Path(recommendations.__file__).parent
@@ -43,7 +43,12 @@ _ALLOWED_CORE_PREFIXES = (
     "northstar_core.recommendations",
 )
 
-_ALLOWED_STANDARD_MODULES = frozenset({"__future__", "dataclasses", "enum"})
+_ALLOWED_STANDARD_MODULES = frozenset({"__future__", "dataclasses", "enum", "functools"})
+
+# Research types that only candidate selection may consume (ADR-017 permits
+# Strategy types; the trade setup and lifecycle stay free of research vocabulary).
+_RESEARCH_NAMES = frozenset({"RecommendationAction", "FuturesRecommendation"})
+_SELECTION_DIR = "selection"
 
 _FORBIDDEN_CORE_PREFIXES = (
     "northstar_core.paper_trading",
@@ -171,7 +176,21 @@ _LIFECYCLE_SURFACE = [
     "TimeExpiryEvidence",
 ]
 
-_APPROVED_SURFACE = sorted(_VALUE_OBJECT_SURFACE + _LIFECYCLE_SURFACE)
+_SELECTION_SURFACE = [
+    "CandidateRejectionReason",
+    "FuturesCandidateRejection",
+    "FuturesCandidateSelection",
+    "FuturesCandidateSelectionCriteria",
+    "FuturesRecommendationCandidate",
+    "FuturesResearchDecision",
+    "InvalidFuturesCandidateRejectionError",
+    "InvalidFuturesCandidateSelectionCriteriaError",
+    "InvalidFuturesCandidateSelectionError",
+    "InvalidFuturesRecommendationCandidateError",
+    "InvalidFuturesResearchDecisionError",
+]
+
+_APPROVED_SURFACE = sorted(_VALUE_OBJECT_SURFACE + _LIFECYCLE_SURFACE + _SELECTION_SURFACE)
 
 
 def _parse(path: Path) -> ast.Module:
@@ -225,6 +244,11 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "futures/value_objects/research_decision_reference.py",
         "futures/value_objects/stop_loss.py",
         "futures/value_objects/trade_direction.py",
+        "futures/selection/__init__.py",
+        "futures/selection/candidate_selection.py",
+        "futures/selection/candidate_selection_criteria.py",
+        "futures/selection/recommendation_candidate.py",
+        "futures/selection/research_decision.py",
     }
     assert len(_OTHER_CORE_FILES) > 100
 
@@ -277,6 +301,8 @@ def test_no_call_reads_a_clock_or_generates_an_identifier(path: Path) -> None:
 @pytest.mark.parametrize("path", _SOURCE_FILES, ids=lambda path: path.name)
 def test_no_execution_or_research_action_name_is_imported(path: Path) -> None:
     forbidden = _imported_names(_parse(path)) & _FORBIDDEN_NAMES
+    if _SELECTION_DIR in path.relative_to(_PACKAGE_ROOT).parts:
+        forbidden -= _RESEARCH_NAMES
 
     assert not forbidden, f"{path.name} imports {sorted(forbidden)}."
 
@@ -350,9 +376,36 @@ def test_the_lifecycle_package_exports_its_part_of_the_surface() -> None:
     assert sorted(lifecycle.__all__) == _LIFECYCLE_SURFACE
 
 
+def test_the_selection_package_exports_its_part_of_the_surface() -> None:
+    assert sorted(selection.__all__) == _SELECTION_SURFACE
+
+
+def test_only_selection_consumes_research_types() -> None:
+    """The trade setup and lifecycle never see BUY/SELL/HOLD research vocabulary."""
+    importers = {
+        path.relative_to(_PACKAGE_ROOT).parts[1]
+        for path in _SOURCE_FILES
+        if _imported_names(_parse(path)) & _RESEARCH_NAMES
+    }
+
+    assert importers == {_SELECTION_DIR}
+
+
+def test_selection_never_assigns_a_trade_direction() -> None:
+    """F-3 keeps the research action; LONG/SHORT mapping belongs to F-4 (ADR-017)."""
+    for path in _SOURCE_FILES:
+        if _SELECTION_DIR in path.relative_to(_PACKAGE_ROOT).parts:
+            assert "TradeDirection" not in _imported_names(_parse(path)), path.name
+
+
 def test_every_exported_name_is_importable_from_its_owner() -> None:
     for name in futures_recommendations.__all__:
-        owner = lifecycle if name in _LIFECYCLE_SURFACE else value_objects
+        if name in _LIFECYCLE_SURFACE:
+            owner = lifecycle
+        elif name in _SELECTION_SURFACE:
+            owner = selection
+        else:
+            owner = value_objects
         assert getattr(futures_recommendations, name) is getattr(owner, name)
 
 
