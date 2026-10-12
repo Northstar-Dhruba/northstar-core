@@ -26,11 +26,37 @@ research decisions of one final session may be considered for a recommendation:
 BUY and SELL decisions of approved products and strategies, with their research
 action kept unchanged. A candidate is not a recommendation and has no direction.
 
-This package models no recommendation generation, price-level policy, tick
-alignment, sizing, margin, persistence, publication, notification, returns or
-profit and loss.
+Recommendation generation (the ``generation`` sub-package) turns the candidates
+of one selection into validated trade-setup proposals under a versioned policy
+(ADR-018): BUY maps to LONG and SELL to SHORT, the nearest validity-eligible
+contract of each product is selected, and entry, stop and target are derived
+from the mean absolute close-to-close change and aligned to a caller-supplied
+price increment, subject to a worst-entry reward-to-risk minimum. A proposal has
+no identity; ``to_recommendation`` takes a caller-supplied one.
+
+This package models no sizing, margin, persistence, publication, notification,
+returns or profit and loss, and generates no identifier.
 """
 
+from .generation import (
+    FuturesCandidateEvidence,
+    FuturesGenerationRejection,
+    FuturesRecommendationGeneration,
+    FuturesRecommendationGenerationPolicy,
+    FuturesRecommendationProposal,
+    FuturesRecommendationSessionWindow,
+    GenerationRejectionReason,
+    InvalidFuturesCandidateEvidenceError,
+    InvalidFuturesGenerationRejectionError,
+    InvalidFuturesRecommendationGenerationError,
+    InvalidFuturesRecommendationGenerationPolicyError,
+    InvalidFuturesRecommendationProposalError,
+    InvalidFuturesRecommendationSessionWindowError,
+    InvalidPriceMovementUnitError,
+    InvalidRewardToRiskError,
+    PriceMovementUnit,
+    RewardToRisk,
+)
 from .lifecycle import (
     CoverageDeficiency,
     FuturesTradeRecommendationEvent,
@@ -85,22 +111,35 @@ __all__ = [
     "CandidateRejectionReason",
     "CoverageDeficiency",
     "EntryZone",
+    "FuturesCandidateEvidence",
     "FuturesCandidateRejection",
     "FuturesCandidateSelection",
     "FuturesCandidateSelectionCriteria",
+    "FuturesGenerationRejection",
     "FuturesRecommendationCandidate",
+    "FuturesRecommendationGeneration",
+    "FuturesRecommendationGenerationPolicy",
+    "FuturesRecommendationProposal",
+    "FuturesRecommendationSessionWindow",
     "FuturesResearchDecision",
     "FuturesResearchDecisionReference",
     "FuturesTradeRecommendation",
     "FuturesTradeRecommendationEvent",
     "FuturesTradeRecommendationIdentity",
     "FuturesTradeRecommendationLifecycle",
+    "GenerationRejectionReason",
     "IntrabarOrdering",
     "InvalidEntryZoneError",
+    "InvalidFuturesCandidateEvidenceError",
     "InvalidFuturesCandidateRejectionError",
     "InvalidFuturesCandidateSelectionCriteriaError",
     "InvalidFuturesCandidateSelectionError",
+    "InvalidFuturesGenerationRejectionError",
     "InvalidFuturesRecommendationCandidateError",
+    "InvalidFuturesRecommendationGenerationError",
+    "InvalidFuturesRecommendationGenerationPolicyError",
+    "InvalidFuturesRecommendationProposalError",
+    "InvalidFuturesRecommendationSessionWindowError",
     "InvalidFuturesResearchDecisionError",
     "InvalidFuturesResearchDecisionReferenceError",
     "InvalidFuturesTradeRecommendationError",
@@ -109,12 +148,15 @@ __all__ = [
     "InvalidFuturesTradeRecommendationIdentityError",
     "InvalidFuturesTradeRecommendationLifecycleError",
     "InvalidFuturesTradeRecommendationObservationError",
+    "InvalidPriceMovementUnitError",
     "InvalidPriceTargetError",
     "InvalidRecommendationPolicyVersionError",
     "InvalidRecommendationValidityError",
+    "InvalidRewardToRiskError",
     "InvalidStopLossError",
     "InvalidTimeExpiryEvidenceError",
     "ObservationCoverage",
+    "PriceMovementUnit",
     "PriceTarget",
     "RecommendationBoundary",
     "RecommendationEventKind",
@@ -122,6 +164,7 @@ __all__ = [
     "RecommendationPolicyVersion",
     "RecommendationStatus",
     "RecommendationValidity",
+    "RewardToRisk",
     "StopLoss",
     "TimeExpiryEvidence",
     "TradeDirection",
