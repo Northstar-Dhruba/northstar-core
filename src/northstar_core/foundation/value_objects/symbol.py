@@ -9,7 +9,7 @@ Invariants:
     - A Symbol value never contains whitespace and never exceeds the allowed length.
 
 Examples:
-    AAPL, MSFT, RELIANCE, BTCUSDT, NIFTY50, BANKNIFTY26AUG25000CE
+    AAPL, MSFT, RELIANCE, M&M, BTCUSDT, NIFTY50, BANKNIFTY26AUG25000CE
 """
 
 from __future__ import annotations
@@ -19,7 +19,8 @@ from dataclasses import dataclass
 
 from northstar_core.foundation.exceptions.validation import InvalidSymbolError
 
-_SYMBOL_PATTERN = re.compile(r"^[A-Z0-9._-]{1,32}$")
+# "&" is permitted by ADR-019: exchange symbols such as M&M contain it.
+_SYMBOL_PATTERN = re.compile(r"^[A-Z0-9._&-]{1,32}$")
 
 
 def _normalize(value: str) -> str:
@@ -55,7 +56,7 @@ class Symbol:
         - The stored value does not contain whitespace and is within the maximum length.
 
     Examples:
-        AAPL, MSFT, RELIANCE, BTCUSDT, NIFTY50, BANKNIFTY26AUG25000CE
+        AAPL, MSFT, RELIANCE, M&M, BTCUSDT, NIFTY50, BANKNIFTY26AUG25000CE
     """
 
     value: str

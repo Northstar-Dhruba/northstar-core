@@ -193,6 +193,15 @@ def test_different_exchange_codes_do_not_compare_equal():
     )
 
 
+def test_ampersand_symbol_on_different_exchanges_does_not_compare_equal():
+    nse = ListingReference(Symbol("M&M"), ExchangeCode("NSE"))
+    bse = ListingReference(Symbol("M&M"), ExchangeCode("BSE"))
+
+    assert nse != bse
+    assert nse == ListingReference(Symbol("m&m"), ExchangeCode("nse"))
+    assert nse != ListingReference(Symbol("MM"), ExchangeCode("NSE"))
+
+
 def test_listing_reference_equality_is_based_on_contained_identity_values():
     left = ListingReference(Symbol("AAPL"), ExchangeCode("NASDAQ"))
     right = ListingReference(Symbol("AAPL"), ExchangeCode("NASDAQ"))
@@ -241,6 +250,12 @@ def test_str_uses_canonical_symbol_at_exchange_representation():
     reference = ListingReference(Symbol("AAPL"), ExchangeCode("NASDAQ"))
 
     assert str(reference) == "AAPL@NASDAQ"
+
+
+def test_str_preserves_ampersand_in_symbol():
+    reference = ListingReference(Symbol("M&M"), ExchangeCode("NSE"))
+
+    assert str(reference) == "M&M@NSE"
 
 
 def test_repr_contains_listing_reference_symbol_and_exchange_code():
