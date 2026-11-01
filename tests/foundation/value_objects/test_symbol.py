@@ -230,3 +230,83 @@ def test_symbol_is_immutable():
 
     with pytest.raises(AttributeError):
         symbol.value = "MSFT"
+
+
+# ---------------------------------------------------------------------------
+# Ampersand (ADR-019)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("value", ["M&M", "M&MFIN", "J&KBANK", "M&M.NS"])
+def test_ampersand_is_accepted(value):
+    symbol = Symbol(value)
+
+    assert symbol.value == value
+
+
+def test_ampersand_symbol_is_normalized_to_uppercase():
+    assert Symbol("m&m").value == "M&M"
+    assert Symbol("j&kBank").value == "J&KBANK"
+
+
+def test_ampersand_symbol_is_trimmed():
+    assert Symbol("  M&M  ").value == "M&M"
+
+
+def test_ampersand_within_maximum_length_symbol_is_accepted():
+    value = "A" * 15 + "&" + "B" * 16
+    symbol = Symbol(value)
+
+    assert len(value) == 32
+    assert symbol.value == value
+
+
+def test_ampersand_symbol_exceeding_maximum_length_is_rejected():
+    with pytest.raises(InvalidSymbolError, match="Symbol exceeds maximum length"):
+        Symbol("A" * 16 + "&" + "B" * 16)
+
+
+def test_ampersand_symbol_with_embedded_whitespace_is_rejected():
+    with pytest.raises(InvalidSymbolError, match="Symbol contains whitespace"):
+        Symbol("M & M")
+
+
+@pytest.mark.parametrize("value", ["M!M", "M/M", "M#M", "M+M", "M@M", "M=M", "M%26M"])
+def test_other_punctuation_remains_rejected(value):
+    with pytest.raises(InvalidSymbolError, match="Symbol contains invalid characters"):
+        Symbol(value)
+
+
+@pytest.mark.parametrize("value", [42, b"M&M", ["M&M"]])
+def test_non_string_input_remains_rejected(value):
+    with pytest.raises(InvalidSymbolError, match="Symbol must be a string"):
+        Symbol(value)
+
+
+def test_ampersand_symbol_is_distinct_from_symbol_without_it():
+    assert Symbol("M&M") != Symbol("MM")
+    assert hash(Symbol("M&M")) == hash(Symbol("m&m"))
+    assert len({Symbol("M&M"), Symbol("m&m"), Symbol("MM")}) == 2
+
+
+def test_ampersand_symbol_orders_by_its_canonical_value():
+    # "&" precedes digits and letters in the canonical value, as any string comparison does.
+    assert sorted([Symbol("MM"), Symbol("M1"), Symbol("M&M")]) == [
+        Symbol("M&M"),
+        Symbol("M1"),
+        Symbol("MM"),
+    ]
+
+
+def test_ampersand_symbol_representation_preserves_ampersand():
+    assert str(Symbol("M&M")) == "M&M"
+    assert repr(Symbol("M&M")) == "Symbol(value='M&M')"
+
+
+@pytest.mark.parametrize(
+    "value",
+    ["AAPL", "BRK.B", "NIFTY_50", "BTC-USDT", "NIFTY50", "BANKNIFTY26AUG25000CE", "A" * 32],
+)
+def test_previously_valid_symbols_keep_their_canonical_value(value):
+    assert Symbol(value).value == value
+    assert Symbol(f" {value.lower()} ") == Symbol(value)
