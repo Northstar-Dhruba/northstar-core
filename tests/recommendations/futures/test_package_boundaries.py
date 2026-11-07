@@ -24,8 +24,20 @@ from northstar_core.recommendations.futures import generation, lifecycle, select
 
 _CORE_ROOT = Path(northstar_core.__file__).parent
 _PACKAGE_ROOT = Path(recommendations.__file__).parent
+# This module governs the Futures sub-package and the shared parent initializer.
+# Sibling instrument families -- ``recommendations.equity`` (ADR-020) -- have
+# their own boundary tests and are not held to Futures' vocabulary.
 _SOURCE_FILES = tuple(
-    sorted(path for path in _PACKAGE_ROOT.rglob("*.py") if "__pycache__" not in path.parts)
+    sorted(
+        [
+            _PACKAGE_ROOT / "__init__.py",
+            *(
+                path
+                for path in (_PACKAGE_ROOT / "futures").rglob("*.py")
+                if "__pycache__" not in path.parts
+            ),
+        ]
+    )
 )
 _OTHER_CORE_FILES = tuple(
     sorted(
