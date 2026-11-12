@@ -18,10 +18,14 @@ candidate on an NSE cash-equity listing into a modeled recommendation setup:
 
 A definition is not eligible, issued or authoritative, and has no identity or
 lifecycle. Modeled levels are not fills. This package models no order, fill,
-position, portfolio, profit and loss, persistence or lifecycle, reads no clock
-and generates no identifier. It may build on Foundation, Domain and Strategy;
-it never imports the Futures recommendation package, Derivatives, Futures,
-Paper Trading or Broker Execution, and no other Core package imports it.
+position, portfolio, profit and loss or persistence, reads no clock and
+generates no identifier. It may build on Foundation, Domain and Strategy; it
+never imports the Futures recommendation package, Derivatives, Futures, Paper
+Trading or Broker Execution, and no other Core package imports it.
+
+The intraday lifecycle of an issued recommendation is the separate subpackage
+``northstar_core.recommendations.equity.lifecycle`` (EI-5B, ADR-024), with its
+own public API. It is not re-exported here.
 """
 
 from northstar_core.recommendations.equity.cost_schedule import (
