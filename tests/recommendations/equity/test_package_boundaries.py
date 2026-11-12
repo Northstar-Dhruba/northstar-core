@@ -6,6 +6,11 @@ or Broker Execution, never a clock, randomness, persistence or outer
 repository. These tests inspect imports, calls and class names through the AST,
 so prose in a docstring can neither cause a false failure nor hide a real
 dependency.
+
+EI-5B (ADR-024, 2026-11-12) approves one subpackage, ``lifecycle``: within it the
+lifecycle concept and the intrabar "ordering" vocabulary (EI0-D9) are no longer
+deferred. Every other rule here still applies to it, and its own architecture
+tests are in ``lifecycle/test_lifecycle_package_boundaries.py``.
 """
 
 from __future__ import annotations
@@ -133,7 +138,7 @@ def _imports(tree: ast.Module) -> list[tuple[str, tuple[str, ...]]]:
 
 
 def test_the_package_has_source_files_to_inspect() -> None:
-    assert {path.name for path in _SOURCE_FILES} == {
+    assert {path.relative_to(_EQUITY_ROOT).as_posix() for path in _SOURCE_FILES} == {
         "__init__.py",
         "_exact.py",
         "cost_schedule.py",
@@ -145,6 +150,12 @@ def test_the_package_has_source_files_to_inspect() -> None:
         "sizing.py",
         "synthetic_inputs.py",
         "timing.py",
+        "lifecycle/__init__.py",
+        "lifecycle/event.py",
+        "lifecycle/evidence.py",
+        "lifecycle/lifecycle.py",
+        "lifecycle/vocabulary.py",
+        "lifecycle/window.py",
     }
 
 
@@ -196,15 +207,21 @@ def test_importing_equity_loads_no_futures_recommendation_or_execution_context()
 
 
 def test_no_class_or_export_names_a_deferred_concept() -> None:
-    names = set(equity.__all__) | {
-        node.name
+    lifecycle_root = _EQUITY_ROOT / "lifecycle"
+    names: set[tuple[str, bool]] = {(name, False) for name in equity.__all__} | {
+        (node.name, lifecycle_root in path.parents)
         for path in _SOURCE_FILES
         for node in ast.walk(_parse(path))
         if isinstance(node, ast.ClassDef)
     }
-    for name in names:
-        for fragment in _DEFERRED_FRAGMENTS:
-            assert fragment not in name.lower(), f"{name} names deferred concept {fragment}."
+    for name, in_lifecycle in names:
+        lowered = name.lower()
+        fragments = _DEFERRED_FRAGMENTS
+        if in_lifecycle:  # approved by EI-5B: the lifecycle and intrabar ordering (EI0-D9)
+            lowered = lowered.replace("ordering", "")
+            fragments = tuple(f for f in fragments if f != "lifecycle")
+        for fragment in fragments:
+            assert fragment not in lowered, f"{name} names deferred concept {fragment}."
 
 
 def test_the_public_surface_is_exactly_the_approved_vocabulary() -> None:
