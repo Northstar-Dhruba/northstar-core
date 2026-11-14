@@ -266,3 +266,44 @@ def test_point_in_time_is_immutable():
 
     with pytest.raises(AttributeError):
         point_in_time.value = "2026-08-17T09:30:01Z"
+
+
+# ---------------------------------------------------------------------------
+# Four-digit years (canonical form is platform-independent)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "0001-01-01T00:00:00Z",
+        "0001-01-01T00:00:00.000001Z",
+        "0009-03-04T05:06:07.5Z",
+        "0099-12-31T23:59:59.999999Z",
+        "0999-12-31T23:59:59.999999Z",
+        "1000-01-01T00:00:00Z",
+        "1000-01-01T00:00:00.123456Z",
+    ],
+)
+def test_years_below_one_thousand_keep_four_digits_and_round_trip(value):
+    point_in_time = PointInTime(value)
+
+    assert point_in_time.value == value
+    assert point_in_time.value[4] == "-"
+    assert PointInTime(point_in_time.value) == point_in_time
+    assert PointInTime(point_in_time.value).value == value
+
+
+def test_the_lowest_representable_instant_is_constructible_and_ordered():
+    lowest = PointInTime("0001-01-01T00:00:00Z")
+    next_microsecond = PointInTime("0001-01-01T00:00:00.000001Z")
+
+    assert lowest.value == "0001-01-01T00:00:00Z"
+    assert lowest.compare(next_microsecond) == -1
+    assert next_microsecond.compare(lowest) == 1
+
+
+def test_an_offset_is_normalized_to_a_four_digit_year():
+    assert PointInTime("0999-12-31T23:30:00-01:00").value == "1000-01-01T00:30:00Z"
+    assert PointInTime("1000-01-01T00:30:00+01:00").value == "0999-12-31T23:30:00Z"
+    assert PointInTime("0010-01-01T01:00:00.25+02:00").value == "0009-12-31T23:00:00.25Z"

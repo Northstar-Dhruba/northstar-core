@@ -68,7 +68,12 @@ def _canonicalize(value: str, match: re.Match[str]) -> str:
 
     utc_value = temporal_value.astimezone(UTC)
     canonical_fraction = f"{utc_value.microsecond:06d}".rstrip("0")
-    canonical_value = utc_value.strftime("%Y-%m-%dT%H:%M:%S")
+    # Explicit field widths, not strftime("%Y"): glibc does not zero-pad years
+    # below 1000, so "%Y" would yield "1-01-01" on Linux and "0001-01-01" on Windows.
+    canonical_value = (
+        f"{utc_value.year:04d}-{utc_value.month:02d}-{utc_value.day:02d}"
+        f"T{utc_value.hour:02d}:{utc_value.minute:02d}:{utc_value.second:02d}"
+    )
     if canonical_fraction:
         canonical_value = f"{canonical_value}.{canonical_fraction}"
     return f"{canonical_value}Z"
